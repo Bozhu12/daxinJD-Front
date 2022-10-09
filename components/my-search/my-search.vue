@@ -3,7 +3,7 @@
     <view class="my-search-container" :style="{ 'background-color': bgcolor }" @click="searchBoxHandler">
         <!-- 搜索 input 输入-->
         <view class="my-search-box" :style="{ 'border-radius': radius+'px'}">
-            <uni-icons type="search" size="17"></uni-icons>
+            <u-icon name="search" size="20"></u-icon>
             <text class="placeholder">搜索</text>
         </view>
     </view>

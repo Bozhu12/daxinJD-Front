@@ -22,12 +22,21 @@
             }
 
         }
+        ,{
+            "path" : "pages/login/login",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
     "globalStyle": {
         "navigationBarTextStyle": "black",
         "navigationBarTitleText": "大新京东",
-        "navigationBarBackgroundColor": "#e1251b",
-        "backgroundColor": "#e1251b"
+        "navigationBarBackgroundColor": "#d81e06",
+        "backgroundColor": "#d81e06"
     },
     // 分包
     "subPackages": [{
@@ -35,18 +44,29 @@
         "pages": [{
             "path": "search/search",
             "style": {
-                "enablePullDownRefresh": false
+                "enablePullDownRefresh": false,
+				"backgroundColor": "#f1f3f7"
             }
         }, {
-            "path": "goods_list/goods_list",
+            "path": "goods/goods",
             "style": {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "商品列表",
                 "enablePullDownRefresh": false
             }
-        }]
+        }
+                ,{
+                    "path" : "goods/goods_details",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
     }],
     "tabBar": {
-        "selectedColor": "#C00000",
+        "selectedColor": "#d81e06",
         "list": [{
                 "pagePath": "pages/home/home",
                 "text": "首页",

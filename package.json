@@ -5,5 +5,22 @@
   },
   "dependencies": {
     "@escook/request-miniprogram": "^0.2.1"
-  }
+  },
+  "name": "daxinjd-front",
+  "description": "前端",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sanscan12/daxinJD-Front.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sanscan12/daxinJD-Front/issues"
+  },
+  "homepage": "https://github.com/Sanscan12/daxinJD-Front#readme"
 }
