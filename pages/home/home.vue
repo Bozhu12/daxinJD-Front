@@ -2,7 +2,7 @@
     <view>
         <!-- 搜索 -->
         <view class="search-box">
-            <my-search @my-click="gotoSearch" :bgcolor="'#d81e06'"></my-search>
+            <my-search @my-click="gotoSearch" :bgcolor="'#e1251b'"></my-search>
         </view>
         <!-- 公告 -->
         <!-- 分类 -->
