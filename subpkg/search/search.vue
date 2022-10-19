@@ -1,34 +1,25 @@
 <template>
     <view>
         <view class="search-box">
-            <!-- <uni-search-bar v-model="kw" @input="input" :radius="20" cancelButton="none"></uni-search-bar> -->
-            <u--input placeholder="请输入" border="bottom" 
-            prefixIcon="search" prefixIconStyle="color: #909399" v-model="kw"
-                @blur="input" @confirm="input"></u--input>
-        </view>
-        <!-- 搜索建议列表 -->
-        <view class="sugg-list" v-if="searchResults.length !== 0">
-            <!-- list op-->
-            <view class="sugg-item" v-for="(item , i) in searchResults" :key="i" @click="gotoDetail(item)">
-                <view class="goods-name">{{item.goods_name}}</view>
-                <!-- <uni-icons type="arrowright" size="16"></uni-icons> -->
-                <u-icon name="arrow-down" color="#bfa199" size="16"></u-icon>
+            <view class="search-content">
+                <u--input placeholder="请输入" border="none" prefixIcon="search" fontSize="16px"
+                    prefixIconStyle="color: #909399" @blur="input" @confirm="input" maxlength="32" 
+                    clearable customStyle="padding-top: 5px;" v-model="kw">
+                </u--input>
             </view>
-            <!-- list ed -->
         </view>
+
         <!-- 搜索历史 -->
         <view class="history-box" v-if="searchResults.length === 0">
             <!-- 标题-->
             <view class="history-title">
                 <text>搜索历史</text>
-                <!-- <uni-icons type="trash" size="17" @click="cleanHistory"></uni-icons> -->
                 <u-icon name="close" @click="cleanHistory"></u-icon>
             </view>
             <!-- 列表-->
             <view class="history-list">
-                <!-- <uni-tag :text="item" v-for="(item,i) in historyList" :key="i" @click="gotoGoodsList(item)"></uni-tag> -->
-                <u-tag :text="item" plain size="mini" @click="input(item)" closeColor="#ecf5ff"
-                    v-for="(item,i) in historyList" :key="i"></u-tag>
+                <u-tag :text="item" plain closable @click="input(item)" closeColor="#e1251b"
+                    v-for="(item,i) in historyList" :key="i" @close="tagClose(i)"></u-tag>
             </view>
         </view>
     </view>
@@ -42,19 +33,19 @@
                 kw: '',
                 searchResults: [],
                 // 历史
-                historyList: ['a', 'b', 'c']
+                historyList: []
             };
         },
         methods: {
             input(e) {
-                this.kw = e
-                this.getSerchList()
-            },
-            async getSerchList() {
                 if (this.kw.length === 0) {
                     this.searchResults = []
                     return
                 }
+                this.saveSearchHistory();
+                this.getSerchList()
+            },
+            async getSerchList() {
                 const {
                     data: res
                 } = await uni.$http.get('/goods/search', {
@@ -62,13 +53,6 @@
                 })
                 if (res.meta.status !== 200) return uni.$showMsg()
                 this.searchResults = res.message
-            },
-            gotoDetail(item) {
-                this.saveSearchHistory()
-                this.kw = ''
-                uni.navigateTo({
-                    url: "/subpkg/goods_detail/goods_detail?goods_id=" + item.goods_id
-                })
             },
             // 保存 并处理 (顺序,重复) 问题
             saveSearchHistory() {
@@ -81,6 +65,10 @@
             cleanHistory() {
                 this.historyList = []
                 uni.setStorageSync('kw', '[]')
+            },
+            tagClose(i) {
+                this.historyList.splice(i, 1);
+                uni.setStorageSync('kw', JSON.stringify(this.historyList))
             }
         },
         onLoad() {
@@ -95,27 +83,19 @@
         position: sticky;
         top: 0;
         z-index: 999;
-    }
+        background-color: #e1251b;
 
-    .sugg-list {
-        padding: 0 5px;
+        height: 42px;
+        padding: 0 10px;
+        align-items: center;
 
-        .sugg-item {
-            font-size: 12px;
-            padding: 13px 0;
-            border-bottom: 1px solid #efefef;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            .goods-name {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                margin-right: 3px;
-            }
-
+        .search-content {
+            height: 36px;
+            border-radius: 16px;
+            padding: 0 8px;
+            background-color: #ffffff;
         }
+
     }
 
     .history-box {
@@ -133,11 +113,6 @@
         .history-list {
             display: flex;
             flex-wrap: wrap;
-
-            .u-transition {
-                margin-top: 5px;
-                margin-right: 10px;
-            }
         }
     }
 </style>
