@@ -13,7 +13,7 @@ export function userLogin(params) {
         url: '/user/login',
         method: 'post',
         data: params,
-        header:{
+        header: {
             "Authorization": 'token'
         }
     })
@@ -22,7 +22,7 @@ export function userLogin(params) {
 // 搜索
 export function goodSearch(params) {
     return request({
-        url: '/',
+        url: '/goods/search',
         method: 'post',
         data: params
     })

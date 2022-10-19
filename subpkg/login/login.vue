@@ -29,7 +29,7 @@
         methods: {
             ...mapMutations('m_user', ['updateUserInfo', 'updateToken']),
             async login() {
-                let login = await uni.login({
+                let login = uni.login({
                     provider: 'weixin'
                 });
                 if (login[1].errMsg.search(/fail/g) !== -1)
