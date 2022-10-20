@@ -1,18 +1,22 @@
 <template>
     <view class="goods-item">
         <!-- 左侧 -->
-        <view class="goods-item-left"><image :src="defaultPic" class="goods-image"></image></view>
+        <view class="goods-item-left">
+            <image :src="goods.goodsSmallLogo || defaultPic" class="goods-image"></image>
+        </view>
         <!-- 右侧 -->
         <view class="goods-item-right">
-            <view class="goods-titem">标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题</view>
+            <view class="goods-titem">{{ goods.goodsTitle }}</view>
             <view class="goods-info-box">
                 <view class="goods-info-msg">
-                    <text>名称</text>
-                    <text>型号</text>
+                    <!-- 名称/品牌 -->
+                    <text>{{ (goods.goodsName == ' ' ? '' : goods.goodsName) || goods.goodsBrand }}</text>
+                    <!-- 型号/类型 -->
+                    <text>{{ goods.goodsModel || goods.goodsClassName }}</text>
                 </view>
                 <view class="goods-info-pric">
-                    <view class="price">5964.00</view>
-                    <view class="sku"><image src="@/static/icon/SKU.png" mode=""></image></view>
+                    <view class="price">{{ goods.goodsPrice == undefined ? '0' : goods.goodsPrice.toFixed(2) }}</view>
+                    <view class="sku" @click="copySku"><image src="@/static/icon/SKU.png" mode=""></image></view>
                 </view>
                 <view class="goods-button">
                     <u-button
@@ -37,12 +41,40 @@
 <script>
 export default {
     name: 'my-goods',
+    props: {
+        goods: {
+            type: Object,
+            default: {}
+        }
+    },
     data() {
         return {
             // 默认的空图片
             defaultPic:
                 'https://img3.doubanio.com/f/movie/8dd0c794499fe925ae2ae89ee30cd225750457b4/pics/movie/celebrity-default-medium.png'
         };
+    },
+    methods: {
+        // 拷贝
+        copySku() {
+            uni.setClipboardData({
+                data: this.goods.goodsSku,
+                success: function() {
+                    uni.showToast({
+                        icon: 'none',
+                        duration: 2000,
+                        title: 'SKU拷到手!'
+                    });
+                },
+                fail: function() {
+                    uni.showToast({
+                        icon: 'none',
+                        duration: 2000,
+                        title: `拷了个寂寞!?`
+                    });
+                }
+            });
+        }
     }
 };
 </script>
@@ -50,7 +82,7 @@ export default {
 <style lang="scss">
 .goods-item {
     display: flex;
-    margin: 32rpx 20rpx;
+    margin: 20rpx;
     padding: 12rpx 10rpx;
     border: 1px solid $u-info-dark;
     border-radius: 20rpx;
