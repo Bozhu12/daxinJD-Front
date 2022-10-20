@@ -138,7 +138,6 @@ export default {
     top: 0;
     z-index: 999;
     background-color: #e1251b;
-
     height: 42px;
     padding: 0 10px;
     align-items: center;

@@ -6,7 +6,6 @@ export function newList(params) {
         data: params
     })
 }
-
 // 登录
 export function userLogin(params) {
     return request({
@@ -18,12 +17,19 @@ export function userLogin(params) {
         }
     })
 }
-
 // 搜索
 export function goodSearch(params) {
     return request({
         url: '/goods/search',
         method: 'post',
         data: params
+    })
+}
+// 按id查询商品详细
+export function goodsDetail(params) {
+    return request({
+        url: `/goods/find/${params}`,
+        method: 'get',
+        data: {}
     })
 }
