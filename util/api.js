@@ -25,11 +25,19 @@ export function goodSearch(params) {
         data: params
     })
 }
-// 按id查询商品详细
+// 按sku查询商品详细
 export function goodsDetail(params) {
     return request({
         url: `/goods/find/${params}`,
         method: 'get',
         data: {}
+    })
+}
+// 修改商品
+export function goodsEdit(params) {
+    return request({
+        url: `/goods/edit/${params.id}`,
+        method: 'post',
+        data: params
     })
 }

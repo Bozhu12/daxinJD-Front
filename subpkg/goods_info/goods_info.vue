@@ -47,61 +47,69 @@
                 customStyle="border:1px solid #ffff; border-radius: 16rpx;"
                 color="linear-gradient(to right, rgb(66, 83, 216), rgb(133, 69, 203))"
                 text="恢复"
+                @click="reset()"
             ></u-button>
             <u-button
                 customStyle="border:1px solid #ffff; border-radius: 16rpx;"
                 color="linear-gradient(to right, rgb(133, 69, 203), rgb(213, 51, 186))"
                 text="修改"
+                @click="submit()"
             ></u-button>
         </view>
     </view>
 </template>
 
 <script>
-import {goodsDetail} from '@/util/api.js';
+import {goodsEdit, goodsDetail} from '@/util/api.js';
+import {equals} from '@/util/equalObj.js';
+import {isPrice} from '@/util/validate.js';
 export default {
     data() {
         return {
             goodsSku: '',
             defaultPic:
                 'https://img3.doubanio.com/f/movie/8dd0c794499fe925ae2ae89ee30cd225750457b4/pics/movie/celebrity-default-medium.png',
-            goods_info: {
-                id: 4,
-                goodsTitle: '摩飞（Morphyrichards）榨汁机 便携式充电迷你无线果汁机料理机搅拌机MR9600  白色',
-                goodsName: null,
-                goodsModel: null,
-                goodsSku: '100003570147',
-                goodsClassId: null,
-                goodsClassName: '榨汁机/原汁机',
-                goodsBrand: '摩飞',
-                goodsPrice: 299,
-                goodsSmallPrice: null,
-                goodsStatus: 1,
-                goodsRemarks: null,
-                goodsBigLogo:
-                    'https://img10.360buyimg.com/n1/jfs/t1/95077/5/22772/176536/62203d6cE7fcbe2ca/3a928c7502ed3b21.jpg.avif',
-                goodsSmallLogo: null,
-                goodsCreateTime: '2022-01-09T16:00:01.000+00:00',
-                goodsUpdateTime: '2022-01-09T16:00:00.000+00:00'
-            }
+            resetGoods: {},
+            goods_info: {}
         };
     },
     methods: {
         async getGoodsDetail() {
             let res = await goodsDetail(this.goodsSku);
             this.goods_info = res.data;
+            // 新开辟地址
+            this.resetGoods = Object.assign({}, res.data);
+        },
+        reset() {
+            if (equals(this.resetGoods, this.goods_info)) return uni.$showMsg('无数据修改');
+            this.goods_info = Object.assign({}, this.resetGoods);
+            uni.$showMsg('恢复最初数据!');
+        },
+        async submit() {
+            // 未修改跳过
+            if (equals(this.resetGoods, this.goods_info)) return uni.$showMsg('无数据修改');
+            // 验证数值
+            if (!isPrice(this.goods_info.goodsSmallPrice) || !isPrice(this.goods_info.goodsPrice))
+                return uni.$showMsg('价格有误');
+
+            let res = await goodsEdit(this.goods_info);
+            if (JSON.stringify(res) === '{}') uni.$showMsg('修改错误');
+            this.goods_info = res.data;
+            // 新开辟地址
+            this.resetGoods = Object.assign({}, res.data);
+            uni.$showMsg('修改完成');
         }
     },
-    // url写单参数
+    // url参数
     onLoad(options) {
-        this.goods_id = options.goods_id;
-        // TODO dev
-        // this.getGoodsDetail();
+        this.goodsSku = options.goods_sku;
+        this.getGoodsDetail();
     },
     filters: {
         date: v => {
+            if (v === undefined) return;
             let split = v.split('T');
-            return split[0] + '  ' + split[1].substring(0, 7);
+            return split[0] + '  ' + split[1].substring(0, 8);
         }
     }
 };

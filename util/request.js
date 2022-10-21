@@ -24,11 +24,7 @@ function service(options = {}) {
             if (Number(res.data.code) == 20000) {
                 resolve(res.data.response);
             } else {
-                uni.showToast({
-                    icon: 'none',
-                    duration: 3000,
-                    title: `${res.data.message}`
-                });
+                uni.$showMsg(`${res.data.message}`);
                 // 错误
                 reject(res.data.message);
             }

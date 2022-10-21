@@ -1,7 +1,7 @@
 import App from './App'
 import { $http } from '@escook/request-miniprogram'
 // 封装信息提示
-uni.$showMsg = function(title = '数据请求失败!', duration = 1500) {
+uni.$showMsg = function(title = '成功', duration = 2000) {
     uni.showToast({
         title,
         duration,
