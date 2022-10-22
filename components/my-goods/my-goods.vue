@@ -83,8 +83,7 @@ export default {
                 goodsName: this.goods.goodsName,
                 goodsPrice: this.goods.goodsPrice,
                 goodsCount: 1,
-                goodsSmallLogo: this.goods.goodsSmallLogo,
-                goodsState: true
+                goodsSmallLogo: this.goods.goodsSmallLogo
             });
             uni.$showMsg('添加成功', 1000);
         }

@@ -27,14 +27,6 @@ export default {
         saveToStorage(state) {
             uni.setStorageSync('cart', JSON.stringify(state.cart))
         },
-        // 更新 购物车商品 勾选状态 
-        updateGoodsState(state, goods) {
-            const findObj = state.cart.find(e => e.goodsId === goods.goodsId)
-            if (findObj) {
-                findObj.goodsState = goods.goodsState
-                this.commit('m_cart/saveToStorage')
-            }
-        },
         // 更新 购物车 商品 选择量
         updateGoodsCount(state, goods) {
             const findObj = state.cart.find(e => e.goodsId === goods.goodsId)

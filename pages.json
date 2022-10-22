@@ -47,7 +47,16 @@
                 "navigationBarTitleText": "",
                 "enablePullDownRefresh": false
             }
-        }]
+        }    ,{
+                    "path" : "client-list/client-list",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
     }],
     "tabBar": {
         "selectedColor": "#C00000",

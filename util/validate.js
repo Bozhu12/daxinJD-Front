@@ -39,3 +39,14 @@ export function equals(obj1, obj2) {
     }
     return true;
 }
+/**
+ * 验证是否为空
+ * @param {Object} obj
+ */
+export function isEmpty(obj) {
+    console.log(obj);
+    if (obj === '' || obj === null || obj === undefined) return true;
+    if (JOSN.stringify(obj) === '{}') return true;
+    for (let n in obj) return false;
+    return false;
+};
