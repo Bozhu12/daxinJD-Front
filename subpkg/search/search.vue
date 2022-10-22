@@ -123,6 +123,16 @@ export default {
             if (this.isloading) return;
             this.searchParams.pageNum += 1;
             this.getSerchList();
+        },
+        // 修改数据则重新加载
+        onShow: function() {
+            if (this.goodsList.length !== 0) {
+                this.searchParams.pageNum = 1;
+                this.searchResults = null;
+                this.goodsList = [];
+                if (this.kw.length === 0) return;
+                this.getSerchList();
+            }
         }
     },
     onLoad() {

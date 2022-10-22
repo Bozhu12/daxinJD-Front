@@ -61,8 +61,7 @@
 
 <script>
 import {goodsEdit, goodsDetail} from '@/util/api.js';
-import {equals} from '@/util/equalObj.js';
-import {isPrice} from '@/util/validate.js';
+import {isPrice, equals} from '@/util/validate.js';
 export default {
     data() {
         return {
@@ -70,7 +69,21 @@ export default {
             defaultPic:
                 'https://img3.doubanio.com/f/movie/8dd0c794499fe925ae2ae89ee30cd225750457b4/pics/movie/celebrity-default-medium.png',
             resetGoods: {},
-            goods_info: {}
+            goods_info: {
+                goodsTitle: '摩飞（Morphyrichards）榨汁机 便携式充电迷你无线果汁机料理机搅拌机MR9600  白色',
+                goodsName: '摩飞 迷你榨汁机555',
+                goodsModel: null,
+                goodsSku: '100003570147',
+                goodsClassId: null,
+                goodsBrand: '摩飞',
+                goodsPrice: 299,
+                goodsSmallPrice: null,
+                goodsStatus: 1,
+                goodsRemarks: null,
+                goodsBigLogo: null,
+                goodsSmallLogo: null,
+                goodsUpdateTime: '2022-01-09T16:00:00.000+00:00'
+            }
         };
     },
     methods: {

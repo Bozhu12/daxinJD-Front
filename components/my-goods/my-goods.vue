@@ -24,6 +24,7 @@
                         shape="circle"
                         text="商品详细"
                         customStyle="margin: 0px 8px; height: 30px;"
+                        @click="gotoGoodsInfo(goods.goodsSku)"
                     ></u-button>
                     <u-button
                         type="primary"
@@ -31,6 +32,7 @@
                         text="添加购物车"
                         color="#e1251b"
                         customStyle="margin: 0px 8px; height: 30px;"
+                        @click="addGoods(goods)"
                     ></u-button>
                 </view>
             </view>
@@ -39,6 +41,7 @@
 </template>
 
 <script>
+import {mapMutations} from 'vuex';
 export default {
     name: 'my-goods',
     props: {
@@ -55,25 +58,35 @@ export default {
         };
     },
     methods: {
+        ...mapMutations('m_cart', ['addToCart']),
         // 拷贝
         copySku() {
             uni.setClipboardData({
                 data: this.goods.goodsSku,
                 success: function() {
-                    uni.showToast({
-                        icon: 'none',
-                        duration: 2000,
-                        title: 'SKU拷到手!'
-                    });
+                    uni.$showMsg('SKU拷到手!');
                 },
                 fail: function() {
-                    uni.showToast({
-                        icon: 'none',
-                        duration: 2000,
-                        title: `拷了个寂寞!?`
-                    });
+                    uni.$showMsg('拷了个寂寞!?');
                 }
             });
+        },
+        gotoGoodsInfo(sku) {
+            uni.navigateTo({
+                url: `../goods_info/goods_info?goods_sku=${sku}`
+            });
+        },
+        addGoods() {
+            this.addToCart({
+                goodsId: this.goods.id,
+                goodsTitem: this.goods.goodsTitle,
+                goodsName: this.goods.goodsName,
+                goodsPrice: this.goods.goodsPrice,
+                goodsCount: 1,
+                goodsSmallLogo: this.goods.goodsSmallLogo,
+                goodsState: true
+            });
+            uni.$showMsg('添加成功', 1000);
         }
     }
 };
@@ -120,7 +133,7 @@ export default {
                 justify-content: space-between;
 
                 text {
-                    font-size: 12px;
+                    font-size: 14px;
                 }
             }
             .goods-info-pric {
