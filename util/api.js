@@ -41,3 +41,11 @@ export function goodsEdit(params) {
         data: params
     })
 }
+// 获取客户列表(带索引)
+export function clientList() {
+    return request({
+        url: `/client/indexlist`,
+        method: 'get',
+        data: {}
+    })
+}
