@@ -66,10 +66,28 @@
                 <text class="total">合计 :</text>
                 <text class="price">￥{{ checkedGoodsAmount }}</text>
             </view>
-            <view style="width: 250rpx;">
+            <view class="button">
+                <u-button
+                    type="warning"
+                    icon="bookmark"
+                    size="large"
+                    text="备注"
+                    @click="remarkShow = !remarkShow"
+                ></u-button>
                 <u-button type="success" icon="shopping-cart" size="large" text="结算" @click="settleOrder"></u-button>
             </view>
         </view>
+
+        <!-- 备注编辑 -->
+        <u-popup :show="remarkShow" :round="10" mode="bottom">
+            <view class="remark">
+                <text>备注信息</text>
+                <view class="textarea">
+                    <u--textarea v-model="orderRemark" placeholder="请输入备注内容"></u--textarea>
+                </view>
+                <u-button type="success" size="large" text="确定" @click="remarkShow = !remarkShow"></u-button>
+            </view>
+        </u-popup>
     </view>
 </template>
 
@@ -77,7 +95,7 @@
 import badgeMix from '@/mixins/tabbar-badge.js';
 import {mapMutations, mapGetters} from 'vuex';
 import {mapState} from 'vuex';
-import {goodsDetail, clientGetById} from '@/util/api.js';
+import {goodsDetail, clientGetById, orderSubmit} from '@/util/api.js';
 import {isEmpty} from '@/util/validate.js';
 export default {
     mixins: [badgeMix],
@@ -91,6 +109,8 @@ export default {
     data() {
         return {
             client: '',
+            orderRemark: '',
+            remarkShow: false,
             options: [
                 {
                     text: '删除',
@@ -143,7 +163,16 @@ export default {
                 }
             });
         },
-        settleOrder() {}
+        async settleOrder() {
+            let res = await orderSubmit({
+                orderPrice: this.checkedGoodsAmount,
+                clientId: this.client.id,
+                // TOOD 登录完善
+                userId: 1,
+                orderRemark: '备注',
+                goodsList: []
+            });
+        }
     },
     // url参数
     onLoad(options) {
@@ -210,17 +239,36 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin-left: 20rpx;
 
         .total {
             font-size: 48rpx;
         }
 
         .price {
-            padding-left: 10px;
+            padding-left: 4px;
             font-size: 42rpx;
             font-weight: 600;
             color: #e1251b;
         }
+    }
+
+    .button {
+        width: 350rpx;
+        display: flex;
+        justify-content: start;
+    }
+}
+.remark {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20rpx;
+
+    text {
+        padding: 10rpx 26rpx;
+    }
+    .textarea {
+        padding: 30rpx;
     }
 }
 </style>

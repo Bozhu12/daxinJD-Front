@@ -65,7 +65,7 @@ export default {
         },
         // 总额
         checkedGoodsAmount(state) {
-            return state.cart.reduce((sum, i) => sum += (i.goodsCount * i.goodsPrice), 0).toFixed(2)
+            return state.cart.reduce((sum, i) => sum += (i.goodsCount * i.goodsPrice), 0).toFixed(1)
         }
     },
 }
