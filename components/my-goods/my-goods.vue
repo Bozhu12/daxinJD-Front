@@ -82,6 +82,7 @@ export default {
                 goodsTitem: this.goods.goodsTitle,
                 goodsName: this.goods.goodsName,
                 goodsPrice: this.goods.goodsPrice,
+                goodsSmallPrice: this.goods.goodsSmallPrice || 0,
                 goodsCount: 1,
                 goodsSmallLogo: this.goods.goodsSmallLogo
             });

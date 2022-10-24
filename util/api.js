@@ -49,3 +49,19 @@ export function clientList() {
         data: {}
     })
 }
+// 获取客户(按id)
+export function clientGetById(params) {
+    return request({
+        url: `/client/find/${params}`,
+        method: 'get',
+        data: {}
+    })
+}
+// 编辑客户(按id)
+export function clienEditById(params) {
+    return request({
+        url: `client/edit`,
+        method: 'post',
+        data: params
+    })
+}

@@ -5,7 +5,7 @@ export default {
     state: () => ({
         // 购物车 对象数组 (初始化数据)
         // 属性: { goodsId, goodsTitem, goodsName, goodsPrice, goodsCount, goodsSmallLogo }
-        cart: JSON.parse(uni.getStorageSync('cart') || '[]')
+        cart: JSON.parse(uni.getStorageSync('cart') || '[]'),
     }),
     // 模块的 mutations 方法
     mutations: {
@@ -41,10 +41,13 @@ export default {
             state.cart = state.cart.filter(e => e.goodsId !== goodsId)
             this.commit('m_cart/saveToStorage')
         },
-        // 全选/反选 购物车 商品
-        updateAllGoodsState(state, newState) {
-            state.cart.forEach(e => e.goodsState = newState)
-            this.commit('m_cart/saveToStorage')
+        // 更新 购物车 商品价格
+        updateGoodsPrice(state, goods) {
+            let findObj = state.cart.find(e => e.goodsId === goods.id);
+            if (findObj) {
+                findObj.goodsPrice = goods.price;
+                this.commit('m_cart/saveToStorage')
+            }
         }
     },
     // 模块的 getters 属性
@@ -55,19 +58,14 @@ export default {
             state.cart.forEach(goods => c += goods.goodsCount)
             return c
         },
-        // 选中 总和数
+        // 总和数
         checkedCount(state) {
-            // 1. 过滤选中的 使用 filter()方法 
-            // 2. 将已选中量累加 使用 reduce()方法 
-            return state.cart.filter(e => e.goodsState).reduce((total, item) => total += item.goodsCount, 0)
+            // 将已选中量累加 使用 reduce()方法 
+            return state.cart.reduce((total, item) => total += item.goodsCount, 0)
         },
-        // 选中 总额
+        // 总额
         checkedGoodsAmount(state) {
-            // 1. 过滤选中的 使用 filter()方法
-            // 2. 将已选中进行累加价格 使用 reduce()方法 
-            // 3. 保留两个位小数
-            return state.cart.filter(e => e.goodsState).reduce((sum, i) => sum += (i.goodsCount * i.goodsPrice), 0)
-                .toFixed(2)
+            return state.cart.reduce((sum, i) => sum += (i.goodsCount * i.goodsPrice), 0).toFixed(2)
         }
     },
 }

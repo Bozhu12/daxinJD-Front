@@ -5,7 +5,7 @@ uni.$showMsg = function(title = '成功', duration = 2000) {
     uni.showToast({
         title,
         duration,
-        icon: 'none'
+        icon: 'none',
     })
 }
 // 请求完成之后做一些事情

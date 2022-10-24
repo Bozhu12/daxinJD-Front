@@ -6,33 +6,42 @@
                 <u-icon name="shopping-cart" size="50rpx"></u-icon>
                 <text style="margin-left: 10px;">购物车</text>
             </view>
-            <text style="color: #e1251b;" v-if="!isNull(client)">暂无选择客户</text>
+            <text style="color: #e1251b;" v-show="isShow">暂无选择客户</text>
             <view style="width: 200rpx;">
                 <u-button text="选择客户" type="success" @click="selectClient"></u-button>
             </view>
         </view>
         <!-- 客户信息 -->
-        <view class="client-msg" v-if="isNull(client)">
+        <view class="client-msg" v-show="!isShow">
             <view>
                 <view>
                     <u-icon name="account"></u-icon>
                     <text>姓名</text>
                 </view>
-                <text>张三丰</text>
+                <text>{{ client.clientName || '张三丰' }}</text>
             </view>
             <view>
                 <view>
                     <u-icon name="phone"></u-icon>
                     <text>电话</text>
                 </view>
-                <text>12345678901</text>
+                <view class="clientPhone">
+                    ①:
+                    <text v-if="client.clientPhone1 !== ''" @click="phoneCall(client.clientPhone1)">
+                        {{ client.clientPhone1 }}
+                    </text>
+                    ②:
+                    <text v-if="client.clientPhone2 !== ''" @click="phoneCall(client.clientPhone2)">
+                        {{ client.clientPhone2 }}
+                    </text>
+                </view>
             </view>
             <view>
                 <view>
                     <u-icon name="map"></u-icon>
                     <text>地址</text>
                 </view>
-                <text>大新镇大新街待考虑34号</text>
+                <text>{{ client.clientAddress || '大新镇大新街23号' }}</text>
             </view>
         </view>
 
@@ -50,19 +59,34 @@
         <view class="qrCodeSkuAdd">
             <u-button type="success" icon="scan" size="large" text="扫码添加" @click="scanQrCode"></u-button>
         </view>
+
+        <!-- 结算 -->
+        <view class="submitOrder">
+            <view class="msg">
+                <text class="total">合计 :</text>
+                <text class="price">￥{{ checkedGoodsAmount }}</text>
+            </view>
+            <view style="width: 250rpx;">
+                <u-button type="success" icon="shopping-cart" size="large" text="结算" @click="settleOrder"></u-button>
+            </view>
+        </view>
     </view>
 </template>
 
 <script>
 import badgeMix from '@/mixins/tabbar-badge.js';
-import {mapMutations} from 'vuex';
+import {mapMutations, mapGetters} from 'vuex';
 import {mapState} from 'vuex';
-import {goodsDetail} from '@/util/api.js';
+import {goodsDetail, clientGetById} from '@/util/api.js';
 import {isEmpty} from '@/util/validate.js';
 export default {
     mixins: [badgeMix],
     computed: {
-        ...mapState('m_cart', ['cart'])
+        ...mapState('m_cart', ['cart']),
+        ...mapGetters('m_cart', ['checkedGoodsAmount']),
+        isShow() {
+            return isEmpty(this.client);
+        }
     },
     data() {
         return {
@@ -78,7 +102,7 @@ export default {
         };
     },
     methods: {
-        ...mapMutations('m_cart', ['updateGoodsCount', 'removeGoodsById', 'addToCart']),
+        ...mapMutations('m_cart', ['updateGoodsCount', 'removeGoodsById', 'addToCart', 'updateGoodsPrice']),
         // 同步总数量
         numberChangeHandler(e) {
             this.updateGoodsCount(e);
@@ -96,19 +120,35 @@ export default {
                 goodsTitem: res.data.goodsTitle,
                 goodsName: res.data.goodsName,
                 goodsPrice: res.data.goodsPrice,
+                goodsSmallPrice: res.data.goodsSmallPrice || 0,
                 goodsCount: 1,
                 goodsSmallLogo: res.data.goodsSmallLogo
             });
             uni.$showMsg('添加成功', 1000);
         },
-        isNull(obj) {
-            isEmpty(obj);
-        },
         selectClient() {
             uni.navigateTo({
                 url: '../../subpkg/client-list/client-list'
             });
-        }
+        },
+        async getClient(id) {
+            let res = await clientGetById(id);
+            this.client = res.client;
+        },
+        phoneCall(phone) {
+            uni.makePhoneCall({
+                phoneNumber: phone,
+                fail: e => {
+                    uni.$showMsg(e);
+                }
+            });
+        },
+        settleOrder() {}
+    },
+    // url参数
+    onLoad(options) {
+        if (options.client_id === '' || options.client_id === undefined) return;
+        this.getClient(options.client_id);
     }
 };
 </script>
@@ -135,7 +175,7 @@ export default {
 .client-msg {
     display: flex;
     flex-direction: column;
-    padding: 10rpx;
+    padding: 16rpx 32rpx;
     border-bottom: 1px solid #e1251b;
 
     view {
@@ -147,8 +187,40 @@ export default {
     view > text {
         margin-left: 5px;
     }
+    .clientPhone > text {
+        color: $u-primary-dark;
+    }
 }
 .qrCodeSkuAdd {
-    padding: 10px;
+    padding: 10px 10px 70px 10px;
+}
+.submitOrder {
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    bottom: -2px;
+    z-index: 999;
+    width: 100%;
+    background: #ffffff;
+    border-top: 1px solid $u-info-disabled;
+
+    .msg {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .total {
+            font-size: 48rpx;
+        }
+
+        .price {
+            padding-left: 10px;
+            font-size: 42rpx;
+            font-weight: 600;
+            color: #e1251b;
+        }
+    }
 }
 </style>

@@ -8,7 +8,19 @@
             <view class="goods-name">{{ goods.goodsName }}</view>
             <view class="goods-info-box">
                 <view class="goods-price">
-                    {{ goods.goodsPrice == undefined ? '0' : goods.goodsPrice.toFixed(2) }} 元
+                    <!-- {{ goods.goodsPrice == undefined ? '0' : goods.goodsPrice.toFixed(2) }} 元 -->
+                    <u--input
+                        type="digit"
+                        maxlength="6"
+                        prefixIcon="rmb"
+                        prefixIconStyle="color: #e1251b"
+                        color="#e1251b"
+                        fontSize="21px"
+                        shape="none"
+                        customStyle="border:none; font-weight: 600;"
+                        :value="goods.goodsPrice == undefined ? 0 : goods.goodsPrice"
+                        @input="pirceChange"
+                    ></u--input>
                 </view>
                 <u-number-box v-model="goods.goodsCount" @change="numChangeHandler"></u-number-box>
             </view>
@@ -17,6 +29,8 @@
 </template>
 
 <script>
+import {mapMutations} from 'vuex';
+import {isPrice} from '@/util/validate.js';
 export default {
     name: 'my-cart-goods',
     props: {
@@ -29,10 +43,13 @@ export default {
     data() {
         return {
             defaultPic:
-                'https://img3.doubanio.com/f/movie/8dd0c794499fe925ae2ae89ee30cd225750457b4/pics/movie/celebrity-default-medium.png'
+                'https://img3.doubanio.com/f/movie/8dd0c794499fe925ae2ae89ee30cd225750457b4/pics/movie/celebrity-default-medium.png',
+            // 防抖延时器
+            timer: null
         };
     },
     methods: {
+        ...mapMutations('m_cart', ['updateGoodsPrice']),
         // numberBox 组件 数值变化时间
         numChangeHandler(num) {
             // 传递 goodsId 和 goodsCount 最新数量
@@ -41,6 +58,21 @@ export default {
                 // 不能保证时时刻刻都是数值类型 +变量 能够快速转换数值
                 goodsCount: +num.value
             });
+        },
+        pirceChange(v) {
+            // 清除 timer 对应的延时器
+            clearTimeout(this.timer);
+            // 1s 未触发则更新数值
+            this.timer = setTimeout(() => {
+                if (!isPrice(v)) {
+                    uni.$showMsg('填写价钱有误!');
+                    return;
+                }
+                this.updateGoodsPrice({
+                    id: this.goods.goodsId,
+                    price: parseFloat(v || 0)
+                });
+            }, 1000);
         }
     }
 };

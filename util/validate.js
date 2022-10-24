@@ -45,7 +45,6 @@ export function equals(obj1, obj2) {
  */
 export function isEmpty(obj) {
     if (obj === '' || obj === null || obj === undefined) return true;
-    if (JOSN.stringify(obj) === '{}') return true;
     for (let n in obj) return false;
     return false;
 };
