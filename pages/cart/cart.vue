@@ -79,7 +79,7 @@
         </view>
 
         <!-- 备注编辑 -->
-        <u-popup :show="remarkShow" :round="10" mode="bottom">
+        <u-popup :show="remarkShow" :round="10" mode="bottom" closeable @close="remarkShow = !remarkShow">
             <view class="remark">
                 <text>备注信息</text>
                 <view class="textarea">

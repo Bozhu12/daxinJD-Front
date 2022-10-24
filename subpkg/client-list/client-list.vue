@@ -1,10 +1,15 @@
 <template>
     <u-index-list :index-list="indexList">
-        <template v-for="(item, index) in itemArr">
-            <u-index-item>
-                <u-swipe-action>
+        <u-swipe-action>
+            <template v-for="(item, index) in itemArr">
+                <u-index-item>
                     <u-index-anchor :text="indexList[index]" v-if="item.length !== 0"></u-index-anchor>
-                    <u-swipe-action-item v-for="(cell, i) in item" :key="i" @click="selected(cell)" :options="options">
+                    <u-swipe-action-item
+                        v-for="(cell, i) in item"
+                        :key="i"
+                        @click="clientOperate($event, cell.id)"
+                        :options="options"
+                    >
                         <view class="list-cell u-border-top u-border-bottom">
                             <view class="cell swipe-action__content">
                                 <text class="swipe-action__content__text">{{ cell.clientName }}</text>
@@ -17,17 +22,29 @@
                             </view>
                         </view>
                     </u-swipe-action-item>
-                </u-swipe-action>
-            </u-index-item>
-        </template>
+                </u-index-item>
+            </template>
+        </u-swipe-action>
+        <!-- 编辑页 -->
+        <my-popup-clientEdit
+            :shwo="operateShow"
+            :client="selectedClient"
+            @showReversal="
+                operateShow = !operateShow;
+                selectedClient = '';
+            "
+            @flushed="getClientList"
+        ></my-popup-clientEdit>
     </u-index-list>
 </template>
 
 <script>
-import {clientList} from '@/util/api.js';
+import {clientList, clienDelById, clientGetById} from '@/util/api.js';
 export default {
     data() {
         return {
+            operateShow: false,
+            selectedClient: '',
             options: [
                 {
                     text: '编辑',
@@ -75,6 +92,7 @@ export default {
         };
     },
     methods: {
+        operateShowReversal() {},
         async getClientList() {
             let res = await clientList();
             this.arrFill(res.data);
@@ -98,6 +116,19 @@ export default {
             uni.reLaunch({
                 url: `../../pages/cart/cart?client_id=${id}`
             });
+        },
+        async clientOperate(...props) {
+            // 0.{index,name}  , 2.客户id
+            // 0编辑 ; 1删除
+            if (props[0].index === 0) {
+                let res = await clientGetById(props[1]);
+                this.selectedClient = res.client;
+                this.operateShow = !this.operateShow;
+            } else if (props[0].index === 1) {
+                await clienDelById(props[1]);
+                this.getClientList();
+                uni.$showMsg('删除成功');
+            }
         }
     },
     onLoad() {

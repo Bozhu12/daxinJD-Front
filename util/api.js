@@ -60,7 +60,23 @@ export function clientGetById(params) {
 // 编辑客户(按id)
 export function clienEditById(params) {
     return request({
-        url: `client/edit`,
+        url: `/client/edit`,
+        method: 'post',
+        data: params
+    })
+}
+// 删除客户(按id)
+export function clienDelById(params) {
+    return request({
+        url: `/client/del/${params}`,
+        method: 'get',
+        data: {}
+    })
+}
+// 订单提交
+export function orderSubmit(params) {
+    return request({
+        url: '/orders/create',
         method: 'post',
         data: params
     })
