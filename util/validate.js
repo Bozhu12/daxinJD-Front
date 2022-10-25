@@ -11,7 +11,15 @@ export function isMobile(s) {
  * @param {*} s
  */
 export function isPhone(s) {
-    return /^([0-9]{3,4}-)?[0-9]{7,8}$/.test(s)
+    return /[1][3,4,5,7,8][0-9]{9}/.test(s)
+}
+/**
+ * 邮箱
+ * @param {*} s
+ */
+export function isEmail(s) {
+    return /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/.test(
+        s)
 }
 /**
  * 价格

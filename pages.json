@@ -53,7 +53,16 @@
                 "navigationBarTitleText": "",
                 "enablePullDownRefresh": false
             }
-        }]
+        }    ,{
+                    "path" : "register/register",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
     }],
     "tabBar": {
         "selectedColor": "#C00000",

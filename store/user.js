@@ -1,13 +1,11 @@
 export default {
     namespaced: true,
-
     state: () => ({
         // 用户登录成功有数据
         token: uni.getStorageSync('token') || '',
         // 用户基本信息
         userinfo: JSON.parse(uni.getStorageSync('userinfo') || '{}'),
     }),
-
     mutations: {
         // 更新用户基本信息
         updateUserInfo(state, userinfo) {
@@ -26,6 +24,5 @@ export default {
             uni.setStorageSync('token', state.token)
         }
     },
-
     getters: {}
 }
