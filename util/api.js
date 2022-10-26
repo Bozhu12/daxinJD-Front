@@ -17,6 +17,14 @@ export function userLogin(params) {
         }
     })
 }
+// 注册
+export function userRegister(params) {
+    return request({
+        url: '/user/register',
+        method: 'post',
+        data: params,
+    })
+}
 // 搜索
 export function goodSearch(params) {
     return request({
