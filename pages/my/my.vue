@@ -2,6 +2,14 @@
     <view class="my-box">
         <!-- 内容 -->
 
+        <!-- 未登录提示 -->
+        <u-empty
+            text="请进行登录!"
+            mode="news"
+            icon="http://cdn.uviewui.com/uview/empty/news.png"
+            v-if="!token"
+        ></u-empty>
+
         <!-- 未登录 -->
         <view class="login" v-if="!token">
             <u-button text="注册" @click="gotoRegister" type="warning" size="large"></u-button>

@@ -6,22 +6,24 @@
         {
             "path": "pages/home/home",
             "style": {
-                "enablePullDownRefresh": false
+                "enablePullDownRefresh": false,
+                "navigationBarTitleText": "大新京东"
             }
         }, {
             "path": "pages/cart/cart",
             "style": {
-                "enablePullDownRefresh": false
+                "enablePullDownRefresh": false,
+                "navigationBarTitleText": "购物车"
             }
         }, {
             "path": "pages/my/my",
             "style": {
-                "enablePullDownRefresh": false
+                "enablePullDownRefresh": false,
+                "navigationBarTitleText": "大新京东"
             }
         }
     ],
     "globalStyle": {
-        "navigationBarTextStyle": "black",
         "navigationBarTitleText": "大新京东",
         "navigationBarBackgroundColor": "#e1251b",
         "backgroundColor": "#e1251b"
@@ -32,37 +34,35 @@
         "pages": [{
             "path": "search/search",
             "style": {
+                "navigationBarTitleText": "商品搜索",
                 "enablePullDownRefresh": false,
                 "onReachBottomDistance": 150
             }
         }, {
             "path": "login/login",
             "style": {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "登录",
                 "enablePullDownRefresh": false
             }
         }, {
             "path": "goods_info/goods_info",
             "style": {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "商品详细",
                 "enablePullDownRefresh": false
             }
         }, {
             "path": "client-list/client-list",
             "style": {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "客户列表",
                 "enablePullDownRefresh": false
             }
-        }    ,{
-                    "path" : "register/register",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-            ]
+        }, {
+            "path": "register/register",
+            "style": {
+                "navigationBarTitleText": "用户注册",
+                "enablePullDownRefresh": false
+            }
+        }]
     }],
     "tabBar": {
         "selectedColor": "#C00000",

@@ -60,6 +60,9 @@
             <u-button type="success" icon="scan" size="large" text="扫码添加" @click="scanQrCode"></u-button>
         </view>
 
+        <!-- 空提示 -->
+        <u-empty mode="car" icon="http://cdn.uviewui.com/uview/empty/car.png" v-if="cart.length === 0"></u-empty>
+
         <!-- 结算 -->
         <view class="submitOrder">
             <view class="msg">
