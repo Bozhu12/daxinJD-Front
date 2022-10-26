@@ -3,44 +3,14 @@
         <view class="login-head"><u-icon name="account" size="100px"></u-icon></view>
         <view class="login-msg">
             <u-row customStyle="margin-bottom: 10px" justify="space-between">
-                <u-col span="2"><text>姓名</text></u-col>
+                <u-col span="2"><text>账号</text></u-col>
                 <u-col span="10">
                     <view class="input">
                         <u--input
-                            @input="checking($event, 'name')"
-                            placeholder="请输入名称"
+                            placeholder="请输入 名称/手机号"
                             border="bottom"
-                            v-model="user.name"
+                            v-model="user.userAccount"
                         ></u--input>
-                        <u-icon ref="name" v-if="user.name !== ''"></u-icon>
-                    </view>
-                </u-col>
-            </u-row>
-            <u-row customStyle="margin-bottom: 10px" justify="space-between">
-                <u-col span="2"><text>手机</text></u-col>
-                <u-col span="10">
-                    <view class="input">
-                        <u--input
-                            @input="checking($event, 'phone')"
-                            placeholder="请输入手机号"
-                            border="bottom"
-                            v-model="user.phone"
-                        ></u--input>
-                        <u-icon ref="phone" v-if="user.phone !== ''"></u-icon>
-                    </view>
-                </u-col>
-            </u-row>
-            <u-row customStyle="margin-bottom: 10px" justify="space-between">
-                <u-col span="2"><text>邮箱</text></u-col>
-                <u-col span="10">
-                    <view class="input">
-                        <u--input
-                            @input="checking($event, 'Email')"
-                            placeholder="请输入邮箱"
-                            border="bottom"
-                            v-model="user.Email"
-                        ></u--input>
-                        <u-icon ref="Email" v-if="user.Email !== ''"></u-icon>
                     </view>
                 </u-col>
             </u-row>
@@ -48,13 +18,8 @@
                 <u-col span="2"><text>密码</text></u-col>
                 <u-col span="10">
                     <view class="input">
-                        <u--input
-                            @input="checking($event, 'password')"
-                            border="bottom"
-                            v-model="user.password"
-                        ></u--input>
+                        <u--input password border="bottom" v-model="user.userPassword"></u--input>
                     </view>
-                    <u-icon ref="password" v-if="user.password !== ''"></u-icon>
                 </u-col>
             </u-row>
         </view>
@@ -69,36 +34,17 @@ export default {
     data() {
         return {
             user: {
-                name: '',
-                phone: '',
-                password: '',
-                Email: ''
-            },
-            promptStyle: [
-                {
-                    name: 'checkmark-circle',
-                    color: '#5ac725'
-                },
-                {
-                    name: 'close-circle',
-                    color: '#f56c6c'
-                }
-            ]
+                userAccount: '',
+                userPassword: ''
+            }
         };
     },
     methods: {
         ...mapMutations('m_user', ['updateUserInfo', 'updateToken']),
         async login() {
-            let login = await uni.login({
-                provider: 'weixin'
-            });
-            if (login[1].errMsg.search(/fail/g) !== -1) return uni.$showMsg('请重新进行授权!!');
-            let res = await userLogin({
-                appid: 'wx85e1042ea783dd18',
-                code: login[1].code
-            });
+            let res = await userLogin(this.user);
             this.updateToken(res.token);
-            this.updateUserInfo(res.data);
+            this.updateUserInfo(res.user);
             // 重定向 (在当前路径返回上级进行跳转 , 否则无效)
             uni.switchTab({
                 url: '../../pages/home/home'
