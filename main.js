@@ -8,6 +8,21 @@ uni.$showMsg = function(title = '成功', duration = 2000) {
         icon: 'none',
     })
 }
+// 跳转登录
+uni.$verifyLogin = function(title = '请进行登录') {
+    if (!store.state.m_user.token) {
+        uni.showToast({
+            title,
+            duration: 2000,
+            icon: 'none',
+        })
+        setTimeout(() => {
+            uni.switchTab({
+                url: '/pages/my/my'
+            })
+        }, 2000);
+    }
+}
 // 请求完成之后做一些事情
 $http.afterRequest = function() {
     uni.hideLoading()

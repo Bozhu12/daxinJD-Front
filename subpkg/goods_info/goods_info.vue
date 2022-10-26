@@ -124,6 +124,9 @@ export default {
             let split = v.split('T');
             return split[0] + '  ' + split[1].substring(0, 8);
         }
+    },
+    onShow() {
+        uni.$verifyLogin();
     }
 };
 </script>

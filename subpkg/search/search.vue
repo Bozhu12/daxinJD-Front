@@ -138,6 +138,9 @@ export default {
     onLoad() {
         // 持久化数据提取
         this.historyList = JSON.parse(uni.getStorageSync('kw') || '[]');
+    },
+    onShow() {
+        uni.$verifyLogin();
     }
 };
 </script>

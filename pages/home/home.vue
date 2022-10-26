@@ -22,7 +22,10 @@ export default {
             });
         }
     },
-    mounted() {}
+    mounted() {},
+    onShow() {
+        uni.$verifyLogin();
+    }
 };
 </script>
 

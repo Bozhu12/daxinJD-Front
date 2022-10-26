@@ -181,6 +181,9 @@ export default {
     onLoad(options) {
         if (options.client_id === '' || options.client_id === undefined) return;
         this.getClient(options.client_id);
+    },
+    onShow() {
+        uni.$verifyLogin();
     }
 };
 </script>

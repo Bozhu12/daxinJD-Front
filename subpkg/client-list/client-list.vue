@@ -133,6 +133,9 @@ export default {
     },
     onLoad() {
         this.getClientList();
+    },
+    onShow() {
+        uni.$verifyLogin();
     }
 };
 </script>
