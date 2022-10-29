@@ -1,6 +1,13 @@
 <template>
     <view class="goods-info-box">
         <view class="goods-info-image"><image :src="goods_info.goodsBigLogo || defaultPic"></image></view>
+        <u-button
+            customStyle="border:1px solid #ffff; border-radius: 16rpx;"
+            color="#e1251b"
+            text="添加购物车"
+            @click="addGoods()"
+        ></u-button>
+
         <u-divider text="商品编辑" textColor="#2979ff" lineColor="#e1251b"></u-divider>
         <view class="godos-data">
             <u-row customStyle="margin-bottom: 10rpx">
@@ -25,15 +32,21 @@
             </u-row>
             <u-row customStyle="margin-bottom: 10rpx">
                 <u-col span="2">市场价:</u-col>
-                <u-col span="10"><u--textarea v-model="goods_info.goodsPrice" autoHeight></u--textarea></u-col>
+                <u-col span="10">
+                    <u--textarea :disabled="edit" v-model="goods_info.goodsPrice" autoHeight></u--textarea>
+                </u-col>
             </u-row>
             <u-row customStyle="margin-bottom: 10rpx">
                 <u-col span="2">最低价:</u-col>
-                <u-col span="10"><u--textarea v-model="goods_info.goodsSmallPrice" autoHeight></u--textarea></u-col>
+                <u-col span="10">
+                    <u--textarea :disabled="edit" v-model="goods_info.goodsSmallPrice" autoHeight></u--textarea>
+                </u-col>
             </u-row>
             <u-row customStyle="margin-bottom: 10rpx">
                 <u-col span="2">备注 :</u-col>
-                <u-col span="10"><u--textarea v-model="goods_info.goodsRemarks" autoHeight></u--textarea></u-col>
+                <u-col span="10">
+                    <u--textarea :disabled="edit" v-model="goods_info.goodsRemarks" autoHeight></u--textarea>
+                </u-col>
             </u-row>
             <u-row customStyle="margin-bottom: 10rpx">
                 <u-col span="2"><text style="font-size: 28rpx;">最后修改</text></u-col>
@@ -42,7 +55,7 @@
                 </u-col>
             </u-row>
         </view>
-        <view class="goodsEdit">
+        <view class="goodsEdit" v-if="!edit">
             <u-button
                 customStyle="border:1px solid #ffff; border-radius: 16rpx;"
                 color="linear-gradient(to right, rgb(66, 83, 216), rgb(133, 69, 203))"
@@ -62,6 +75,7 @@
 <script>
 import {goodsEdit, goodsDetail} from '@/util/api.js';
 import {isPrice, equals} from '@/util/validate.js';
+import {mapMutations} from 'vuex';
 export default {
     data() {
         return {
@@ -69,6 +83,7 @@ export default {
             defaultPic:
                 'https://img3.doubanio.com/f/movie/8dd0c794499fe925ae2ae89ee30cd225750457b4/pics/movie/celebrity-default-medium.png',
             resetGoods: {},
+            edit: true,
             goods_info: {
                 goodsTitle: '摩飞（Morphyrichards）榨汁机 便携式充电迷你无线果汁机料理机搅拌机MR9600  白色',
                 goodsName: '摩飞 迷你榨汁机555',
@@ -87,6 +102,7 @@ export default {
         };
     },
     methods: {
+        ...mapMutations('m_cart', ['addToCart']),
         async getGoodsDetail() {
             let res = await goodsDetail(this.goodsSku);
             this.goods_info = res.data;
@@ -111,11 +127,25 @@ export default {
             // 新开辟地址
             this.resetGoods = Object.assign({}, res.data);
             uni.$showMsg('修改完成');
+        },
+        addGoods() {
+            this.addToCart({
+                goodsId: this.goods_info.id,
+                goodsTitem: this.goods_info.goodsTitle,
+                goodsName: this.goods_info.goodsName,
+                goodsPrice: this.goods_info.goodsPrice,
+                goodsSmallPrice: this.goods_info.goodsSmallPrice || 0,
+                goodsCount: 1,
+                goodsSmallLogo: this.goods_info.goodsSmallLogo
+            });
+            uni.$showMsg('添加成功', 1000);
+            uni.navigateBack();
         }
     },
     // url参数
     onLoad(options) {
         this.goodsSku = options.goods_sku;
+        this.edit = !options.edit;
         this.getGoodsDetail();
     },
     filters: {

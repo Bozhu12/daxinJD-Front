@@ -1,12 +1,12 @@
 <template>
     <view class="goods-item">
         <!-- 左侧 -->
-        <view class="goods-item-left">
+        <view class="goods-item-left" @click="gotoJdPage">
             <image :src="goods.goodsSmallLogo || defaultPic" class="goods-image"></image>
         </view>
         <!-- 右侧 -->
         <view class="goods-item-right">
-            <view class="goods-titem">{{ goods.goodsTitle }}</view>
+            <view class="goods-titem" @click="gotoJdPage">{{ goods.goodsTitle }}</view>
             <view class="goods-info-box">
                 <view class="goods-info-msg">
                     <!-- 名称/品牌 -->
@@ -52,6 +52,7 @@ export default {
     },
     data() {
         return {
+            jdUrl: 'http://item.jd.com/',
             // 默认的空图片
             defaultPic:
                 'https://img3.doubanio.com/f/movie/8dd0c794499fe925ae2ae89ee30cd225750457b4/pics/movie/celebrity-default-medium.png'
@@ -73,7 +74,7 @@ export default {
         },
         gotoGoodsInfo(sku) {
             uni.navigateTo({
-                url: `../goods_info/goods_info?goods_sku=${sku}`
+                url: `../goods_info/goods_info?goods_sku=${sku}&edit=true`
             });
         },
         addGoods() {
@@ -87,6 +88,12 @@ export default {
                 goodsSmallLogo: this.goods.goodsSmallLogo
             });
             uni.$showMsg('添加成功', 1000);
+        },
+        gotoJdPage() {
+            let url = this.jdUrl + this.goods.goodsSku + '.html';
+            uni.navigateTo({
+                url: `../webview/webview?url=${url}`
+            });
         }
     }
 };

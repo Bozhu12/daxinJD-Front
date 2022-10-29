@@ -62,7 +62,16 @@
                 "navigationBarTitleText": "用户注册",
                 "enablePullDownRefresh": false
             }
-        }]
+        }    ,{
+                    "path" : "webview/webview",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
     }],
     "tabBar": {
         "selectedColor": "#C00000",

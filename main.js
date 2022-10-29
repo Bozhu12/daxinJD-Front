@@ -1,5 +1,6 @@
 import App from './App'
 import { $http } from '@escook/request-miniprogram'
+// 全局变量
 // 封装信息提示
 uni.$showMsg = function(title = '成功', duration = 2000) {
     uni.showToast({
