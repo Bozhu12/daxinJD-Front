@@ -1,6 +1,7 @@
 <template>
     <view class="my-box">
         <!-- 内容 -->
+        <my-userinfo v-if="token"></my-userinfo>
 
         <!-- 未登录提示 -->
         <u-empty
