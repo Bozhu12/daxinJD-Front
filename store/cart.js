@@ -6,6 +6,8 @@ export default {
         // 购物车 对象数组 (初始化数据)
         // 属性: { goodsId, goodsTitem, goodsName, goodsPrice, goodsCount, goodsSmallLogo }
         cart: JSON.parse(uni.getStorageSync('cart') || '[]'),
+        // 扫描的商品SKU
+        goodsSkuList: []
     }),
     // 模块的 mutations 方法
     mutations: {
@@ -48,6 +50,12 @@ export default {
                 findObj.goodsPrice = goods.price;
                 this.commit('m_cart/saveToStorage')
             }
+        },
+        updateToscanData(state, list) {
+            state.goodsSkuList = list;
+        },
+        clearScanData() {
+            state.goodsSkuList = [];
         }
     },
     // 模块的 getters 属性

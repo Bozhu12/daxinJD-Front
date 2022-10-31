@@ -151,7 +151,7 @@ export default {
         },
         selectClient() {
             uni.navigateTo({
-                url: '../../subpkg/client-list/client-list'
+                url: '../../subpkg/client-list/client-list?selected=true'
             });
         },
         async getClient(id) {

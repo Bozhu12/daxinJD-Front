@@ -4,22 +4,61 @@
         <view class="search-box"><my-search @my-click="gotoSearch" :bgcolor="'#e1251b'"></my-search></view>
         <!-- 公告 -->
         <view class="announcementMsg"><u-notice-bar :text="announcementMsg" direction="column"></u-notice-bar></view>
-        <!-- 扫码 -->
-        <view class="qrCodeSku">
-            <u-button type="success" icon="scan" size="large" text="扫码查商品" @click="scanQrCode"></u-button>
-        </view>
         <!-- 分类 -->
         <view class="type">
             <u-grid :border="true" @click="gotoFindByType" col="4">
                 <u-grid-item v-for="(baseListItem, baseListIndex) in baseList" :key="baseListIndex">
-                    <!-- <u-icon :customStyle="{paddingTop: 20 + 'rpx'}" :name="baseListItem.name" :size="22"></u-icon> -->
                     <view class="type-icon"><image :src="baseListItem.src"></image></view>
                     <text class="grid-text">{{ baseListItem.title }}</text>
                 </u-grid-item>
             </u-grid>
             <u-toast ref="uToast" />
         </view>
-        <!-- ... -->
+        <!-- 功能模块 -->
+        <view class="editPanel">
+            <view class="editPanel-left">
+                <view class="editPanel-left-head">
+                    <u-button
+                        customStyle="height: 144rpx"
+                        type="warning"
+                        size="large"
+                        text="客户列表"
+                        @click="gotoClientList"
+                    ></u-button>
+                </view>
+                <view class="editPanel-left-tail">
+                    <u-button
+                        customStyle="height: 144rpx"
+                        type="success"
+                        icon="scan"
+                        size="large"
+                        text="连续扫码"
+                        @click="scanQrCodeLast"
+                    ></u-button>
+                </view>
+            </view>
+            <view class="editPanel-right">
+                <view class="editPanel-right-head">
+                    <u-button
+                        customStyle="height: 144rpx"
+                        type="primary"
+                        size="large"
+                        text="二维码生成"
+                        @click="gotoQrCodeCreate"
+                    ></u-button>
+                </view>
+                <view class="editPanel-right-tail">
+                    <u-button
+                        customStyle="height: 144rpx"
+                        type="success"
+                        icon="scan"
+                        size="large"
+                        text="扫码查商品"
+                        @click="scanQrCode"
+                    ></u-button>
+                </view>
+            </view>
+        </view>
     </view>
 </template>
 
@@ -82,6 +121,17 @@ export default {
         },
         gotoFindByType(e) {
             console.log(e);
+        },
+        gotoClientList() {
+            uni.navigateTo({
+                url: '../../subpkg/client-list/client-list?selected=false'
+            });
+        },
+        gotoQrCodeCreate() {},
+        scanQrCodeLast() {
+            uni.navigateTo({
+                url: '../../subpkg/qrCode/qrCode'
+            });
         }
     },
     onShow() {
@@ -95,10 +145,31 @@ export default {
     .search-box {
         width: 100%;
     }
-    .qrCodeSku {
+
+    .editPanel {
         width: 666rpx;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin: auto;
-        margin-top: 10rpx;
+        margin-top: 20rpx;
+        padding: 10rpx;
+        border-radius: 10rpx;
+
+        .editPanel-left {
+            width: 333rpx;
+
+            .editPanel-left-tail {
+                margin-top: 10rpx;
+            }
+        }
+        .editPanel-right {
+            width: 333rpx;
+            padding-left: 23rpx;
+            .editPanel-right-tail {
+                margin-top: 10rpx;
+            }
+        }
     }
 
     .type {
