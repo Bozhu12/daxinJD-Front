@@ -1,12 +1,20 @@
 <template>
     <view class="goods-info-box">
         <view class="goods-info-image"><image :src="goods_info.goodsBigLogo || defaultPic"></image></view>
-        <u-button
-            customStyle="border:1px solid #ffff; border-radius: 16rpx;"
-            color="#e1251b"
-            text="添加购物车"
-            @click="addGoods()"
-        ></u-button>
+        <view class="actButton">
+            <u-button
+                customStyle="border:1px solid #ffff; border-radius: 16rpx;"
+                color="#f9ae3d"
+                text="添加收藏"
+                @click="addCollection()"
+            ></u-button>
+            <u-button
+                customStyle="border:1px solid #ffff; border-radius: 16rpx;"
+                color="#e1251b"
+                text="添加购物车"
+                @click="addGoods()"
+            ></u-button>
+        </view>
 
         <u-divider text="商品编辑" textColor="#2979ff" lineColor="#e1251b"></u-divider>
         <view class="godos-data">
@@ -75,8 +83,11 @@
 <script>
 import {goodsEdit, goodsDetail} from '@/util/api.js';
 import {isPrice, equals} from '@/util/validate.js';
-import {mapMutations} from 'vuex';
+import {mapMutations, mapState} from 'vuex';
 export default {
+    computed: {
+        ...mapState('m_user', ['collection'])
+    },
     data() {
         return {
             goodsSku: '',
@@ -103,6 +114,7 @@ export default {
     },
     methods: {
         ...mapMutations('m_cart', ['addToCart']),
+        ...mapMutations('m_user', ['addCollectionGoods']),
         async getGoodsDetail() {
             let res = await goodsDetail(this.goodsSku);
             this.goods_info = res.data;
@@ -140,6 +152,11 @@ export default {
             });
             uni.$showMsg('添加成功', 1000);
             uni.navigateBack();
+        },
+        addCollection() {
+            // console.log(this.collection);
+            this.addCollectionGoods(this.goods_info.goodsSku);
+            uni.$showMsg('收藏成功', 1000);
         }
     },
     // url参数
@@ -167,6 +184,10 @@ export default {
         image {
             width: 100%;
         }
+    }
+    .actButton {
+        display: flex;
+        justify-content: space-between;
     }
     .godos-data {
         padding: 8rpx 20rpx;
