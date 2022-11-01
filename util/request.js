@@ -26,6 +26,13 @@ function service(options = {}) {
                 resolve(res.data.response);
             } else {
                 uni.$showMsg(`${res.data.message}`);
+                if (Number(res.data.code) === 40100) {
+                    setTimeout(() => {
+                        uni.switchTab({
+                            url: '/pages/my/my'
+                        })
+                    }, 2000);
+                }
                 // 错误
                 reject(res.data.message);
             }

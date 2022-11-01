@@ -32,7 +32,7 @@
                     closeColor="#e1251b"
                     v-for="(item, i) in historyList"
                     :key="i"
-                    @close="tagClose(i)"
+                    @close="cleanHistoryByTag(i)"
                 ></u-tag>
             </view>
         </view>
@@ -67,6 +67,7 @@ export default {
             searchParams: {
                 query: '',
                 cid: '',
+                type: '',
                 pageNum: 1,
                 pageSize: 20
             },
@@ -83,7 +84,7 @@ export default {
             this.searchParams.pageNum = 1;
             this.searchResults = null;
             this.goodsList = [];
-            if (this.kw.length === 0) return;
+            if (this.kw.length === 0 && this.searchParams.tyep !== '') return;
             this.getSerchList();
         },
         async getSerchList() {
@@ -97,6 +98,7 @@ export default {
         },
         // 保存 并处理 (顺序,重复) 问题
         saveSearchHistory() {
+            if (this.kw === '' || this.kw === undefined) return;
             // 将数组 set集合化 并合并添加
             this.historyList = [...new Set([this.kw, ...this.historyList])];
             // this.historyList.push(this.kw);
@@ -107,7 +109,7 @@ export default {
             this.historyList = [];
             uni.setStorageSync('kw', '[]');
         },
-        tagClose(i) {
+        cleanHistoryByTag(i) {
             this.historyList.splice(i, 1);
             uni.setStorageSync('kw', JSON.stringify(this.historyList));
         },
@@ -125,19 +127,22 @@ export default {
             this.getSerchList();
         },
         // 修改数据则重新加载
-        onShow: function() {
+        async onShow() {
             if (this.goodsList.length !== 0) {
-                this.searchParams.pageNum = 1;
-                this.searchResults = null;
-                this.goodsList = [];
-                if (this.kw.length === 0) return;
-                this.getSerchList();
+                let res = await goodSearch(this.searchParams);
+                this.searchResults = res.data;
+                this.goodsList = res.data.records;
             }
         }
     },
-    onLoad() {
-        // 持久化数据提取
-        this.historyList = JSON.parse(uni.getStorageSync('kw') || '[]');
+    onLoad(options) {
+        if (options.type === '' || options.type === undefined) {
+            // 持久化数据提取
+            this.historyList = JSON.parse(uni.getStorageSync('kw') || '[]');
+        } else {
+            this.searchParams.type = options.type;
+            this.getSerchList();
+        }
     },
     onShow() {
         uni.$verifyLogin();

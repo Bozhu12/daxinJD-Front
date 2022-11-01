@@ -72,36 +72,44 @@ export default {
             baseList: [
                 {
                     src: '/static/icon/tv.png',
-                    title: '电视'
+                    title: '电视',
+                    typeText: '电视'
                 },
                 {
                     src: '/static/icon/refrigerator.png',
-                    title: '冰箱'
+                    title: '冰箱',
+                    typeText: '冰'
                 },
                 {
                     src: '/static/icon/washer.png',
-                    title: '洗衣机'
+                    title: '洗衣机',
+                    typeText: '洗衣机'
                 },
                 {
                     src: '/static/icon/waterHeater.png',
-                    title: '热水器'
+                    title: '热水器',
+                    typeText: '热水器'
                 },
                 {
                     src: '/static/icon/fan.png',
-                    title: '空调'
+                    title: '空调',
+                    typeText: '空调'
                 },
                 {
                     src: '/static/icon/cooker.png',
-                    title: '电饭煲'
+                    title: '电饭煲',
+                    typeText: '电饭'
                 },
 
                 {
                     src: '/static/icon/solarEnergy.png',
-                    title: '太阳能'
+                    title: '太阳能',
+                    typeText: '太阳能'
                 },
                 {
                     src: '/static/icon/disinfectionCabinet.png',
-                    title: '消毒柜'
+                    title: '消毒柜',
+                    typeText: '消毒柜'
                 }
             ]
         };
@@ -120,7 +128,9 @@ export default {
             });
         },
         gotoFindByType(e) {
-            console.log(e);
+            uni.navigateTo({
+                url: `../../subpkg/search/search?type=${this.baseList[e].typeText}`
+            });
         },
         gotoClientList() {
             uni.navigateTo({
