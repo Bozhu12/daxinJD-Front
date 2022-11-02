@@ -185,7 +185,4 @@ export default {
         flex-wrap: wrap;
     }
 }
-
-.goodsList-box {
-}
 </style>

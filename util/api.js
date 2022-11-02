@@ -1,5 +1,5 @@
 import request from './@/util/request.js'
-// 登录
+// 登录 用户
 export function userLogin(params) {
     return request({
         url: '/user/login',
@@ -10,7 +10,7 @@ export function userLogin(params) {
         }
     })
 }
-// 注册
+// 注册 用户
 export function userRegister(params) {
     return request({
         url: '/user/register',
@@ -18,7 +18,7 @@ export function userRegister(params) {
         data: params,
     })
 }
-// 搜索
+// 搜索 商品
 export function goodSearch(params) {
     return request({
         url: '/goods/search',
@@ -26,7 +26,7 @@ export function goodSearch(params) {
         data: params
     })
 }
-// 按sku查询商品详细
+// 查询 商品 按sku
 export function goodsDetail(params) {
     return request({
         url: `/goods/find/${params}`,
@@ -34,7 +34,15 @@ export function goodsDetail(params) {
         data: {}
     })
 }
-// 修改商品
+// 查询 商品 按sku (批量)
+export function goodsFindBySkus(params) {
+    return request({
+        url: `/goods/find/sku`,
+        method: 'post',
+        data: params
+    })
+}
+// 修改 商品
 export function goodsEdit(params) {
     return request({
         url: `/goods/edit/${params.id}`,
@@ -50,7 +58,7 @@ export function clientList() {
         data: {}
     })
 }
-// 获取客户(按id)
+// 查询 客户 按id
 export function clientGetById(params) {
     return request({
         url: `/client/find/${params}`,

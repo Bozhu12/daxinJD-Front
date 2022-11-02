@@ -10,8 +10,8 @@
             <!-- 面板1区域 -->
             <view class="panel">
                 <view class="panel-body">
-                    <view class="panel-item">
-                        <text>12</text>
+                    <view class="panel-item" @click="gotoGoodsList">
+                        <text>{{ collection.length }}</text>
                         <text>我的收藏</text>
                     </view>
                     <view class="panel-item">
@@ -41,13 +41,17 @@ import {mapState} from 'vuex';
 export default {
     name: 'my-userinfo',
     computed: {
-        ...mapState('m_user', ['userinfo'])
+        ...mapState('m_user', ['userinfo', 'collection'])
     },
     data() {
         return {};
     },
-    mounted() {
-        console.log(this.userinfo);
+    methods: {
+        gotoGoodsList() {
+            uni.navigateTo({
+                url: '../../subpkg/goods_list/goods_list'
+            });
+        }
     }
 };
 </script>
