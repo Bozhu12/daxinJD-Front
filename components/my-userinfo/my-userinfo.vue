@@ -29,7 +29,7 @@
                 <u-cell-group>
                     <u-cell icon="setting-fill" title="个人设置"></u-cell>
                     <u-cell icon="question-circle" title="问题反馈"></u-cell>
-                    <u-cell icon="account" title="退出登录"></u-cell>
+                    <u-cell icon="account" title="退出登录" @click="outLogin"></u-cell>
                 </u-cell-group>
             </view>
         </view>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex';
+import {mapState, mapMutations} from 'vuex';
 export default {
     name: 'my-userinfo',
     computed: {
@@ -47,10 +47,15 @@ export default {
         return {};
     },
     methods: {
+        ...mapMutations('m_user', ['updateToken']),
         gotoGoodsList() {
             uni.navigateTo({
                 url: '../../subpkg/goods_list/goods_list'
             });
+        },
+        outLogin() {
+            this.updateToken('');
+            uni.$showMsg('退出成功');
         }
     }
 };

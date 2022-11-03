@@ -33,6 +33,16 @@
                         color="#e1251b"
                         customStyle="margin: 0px 8px; height: 30px;"
                         @click="addGoods(goods)"
+                        v-if="addShow"
+                    ></u-button>
+                    <u-button
+                        type="primary"
+                        shape="circle"
+                        text="取消收藏"
+                        color="#e1251b"
+                        customStyle="margin: 0px 8px; height: 30px;"
+                        @click="delCollection(goods.goodsSku)"
+                        v-if="!addShow"
                     ></u-button>
                 </view>
             </view>
@@ -48,6 +58,10 @@ export default {
         goods: {
             type: Object,
             default: {}
+        },
+        addShow: {
+            type: Boolean,
+            default: true
         }
     },
     data() {
@@ -94,6 +108,9 @@ export default {
             uni.navigateTo({
                 url: `../webview/webview?url=${url}`
             });
+        },
+        delCollection(sku) {
+            this.$emit('clear', sku);
         }
     }
 };

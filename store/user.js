@@ -18,17 +18,15 @@ export default {
             uni.setStorageSync('userinfo', JSON.stringify(state.userinfo))
         },
         // 用户收藏
-        updateCollection(state, collection) {
-            state.collection = collection;
+        deleteCollection(state, index) {
+            state.collection.splice(index, 1);
             this.commit('m_user/saveCollectionGoods')
         },
         addCollectionGoods(state, goodsSku) {
             // 防止重复
-            if (state.collection.length >= 1) {
-                let arr = state.collection.filter(e => goodsSku === e);
-                if (arr.length >= 1) return;
-            }
-            state.collection = [...state.collection, goodsSku]
+            const findObj = state.collection.find((e) => goodsSku === e)
+            if (findObj) return;
+            state.collection.push(goodsSku)
             this.commit('m_user/saveCollectionGoods')
         },
         saveCollectionGoods(state) {
