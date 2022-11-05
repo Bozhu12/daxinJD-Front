@@ -96,14 +96,14 @@
 
 <script>
 import badgeMix from '@/mixins/tabbar-badge.js';
-import {mapMutations, mapGetters} from 'vuex';
-import {mapState} from 'vuex';
+import {mapMutations, mapGetters, mapState} from 'vuex';
 import {goodsDetail, clientGetById, orderSubmit} from '@/util/api.js';
 import {isEmpty} from '@/util/validate.js';
 export default {
     mixins: [badgeMix],
     computed: {
         ...mapState('m_cart', ['cart']),
+        ...mapState('m_user', ['userinfo']),
         ...mapGetters('m_cart', ['checkedGoodsAmount']),
         isShow() {
             return isEmpty(this.client);
@@ -125,7 +125,7 @@ export default {
         };
     },
     methods: {
-        ...mapMutations('m_cart', ['updateGoodsCount', 'removeGoodsById', 'addToCart', 'updateGoodsPrice']),
+        ...mapMutations('m_cart', ['updateGoodsCount', 'removeGoodsById', 'addToCart', 'submitCart']),
         // 同步总数量
         numberChangeHandler(e) {
             this.updateGoodsCount(e);
@@ -167,13 +167,27 @@ export default {
             });
         },
         async settleOrder() {
+            let arr = [];
+            let cartList = this.cart;
+            for (let i = 0; cartList.length > i; i++) {
+                arr[i] = {
+                    goodsId: cartList[i].goodsId,
+                    goodsCount: cartList[i].goodsCount,
+                    goodsPrice: cartList[i].goodsPrice
+                };
+            }
             let res = await orderSubmit({
                 orderPrice: this.checkedGoodsAmount,
                 clientId: this.client.id,
-                // TOOD 登录完善
-                userId: 1,
-                orderRemark: '备注',
-                goodsList: []
+                userId: this.userinfo.id,
+                orderRemark: this.orderRemark,
+                goodsList: arr
+            });
+            this.submitCart();
+            // console.log(res);
+            this.client = '';
+            uni.switchTab({
+                url: '/pages/my/my'
             });
         }
     },

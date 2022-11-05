@@ -68,25 +68,26 @@
                 "navigationBarTitleText": "",
                 "enablePullDownRefresh": false
             }
-        }    ,{
-                    "path" : "qrCode/qrCode",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-                ,{
-                    "path" : "goods_list/goods_list",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-            ]
+        }, {
+            "path": "qrCode/qrCode",
+            "style": {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+        }, {
+            "path": "goods_list/goods_list",
+            "style": {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+        }, {
+            "path": "order_list/order_list",
+            "style": {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+                "onReachBottomDistance": 100
+            }
+        }]
     }],
     "tabBar": {
         "selectedColor": "#C00000",

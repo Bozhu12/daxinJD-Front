@@ -109,8 +109,8 @@ export default {
                 url: `../webview/webview?url=${url}`
             });
         },
-        delCollection(sku) {
-            this.$emit('clear', sku);
+        delCollection() {
+            this.$emit('clear');
         }
     }
 };

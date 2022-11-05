@@ -90,3 +90,14 @@ export function orderSubmit(params) {
         data: params
     })
 }
+// 订单列表
+export function orderList(pageNum, pageSize) {
+    return request({
+        url: '/orders/list',
+        method: 'post',
+        data: {
+            pageNum,
+            pageSize
+        }
+    })
+}

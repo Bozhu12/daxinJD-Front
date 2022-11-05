@@ -15,7 +15,7 @@
                             <text>{{ collection.length }}</text>
                             <text>我的收藏</text>
                         </view>
-                        <view class="panel-item">
+                        <view class="panel-item" @click="gotoOrderList">
                             <text>32</text>
                             <text>我的订单</text>
                         </view>
@@ -76,8 +76,13 @@ export default {
             });
         },
         gotoGoodsList() {
-            uni.redirectTo({
+            uni.navigateTo({
                 url: '../../subpkg/goods_list/goods_list'
+            });
+        },
+        gotoOrderList() {
+            uni.navigateTo({
+                url: '../../subpkg/order_list/order_list'
             });
         },
         outLogin() {

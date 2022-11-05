@@ -25,10 +25,6 @@ export default {
             // 通过 commit方法调用 , 用 m_cart命名空间下的 saveToStorage方法
             this.commit('m_cart/saveToStorage')
         },
-        // 持久化储存购物车商品 (本地持久化)
-        saveToStorage(state) {
-            uni.setStorageSync('cart', JSON.stringify(state.cart))
-        },
         // 更新 购物车 商品 选择量
         updateGoodsCount(state, goods) {
             const findObj = state.cart.find(e => e.goodsId === goods.goodsId)
@@ -50,6 +46,15 @@ export default {
                 findObj.goodsPrice = goods.price;
                 this.commit('m_cart/saveToStorage')
             }
+        },
+        // 提交 购物车 清空
+        submitCart(state) {
+            state.cart = [];
+            this.commit('m_cart/saveToStorage');
+        },
+        // 持久化储存购物车商品 (本地持久化)
+        saveToStorage(state) {
+            uni.setStorageSync('cart', JSON.stringify(state.cart))
         },
         updateToscanData(state, list) {
             state.goodsSkuList = list;
