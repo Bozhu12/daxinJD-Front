@@ -161,6 +161,10 @@ export default {
     },
     // url参数
     onLoad(options) {
+        if ((options.goodsSku = null || options.goodsSku == undefined)) {
+            uni.navigateBack();
+            return;
+        }
         this.goodsSku = options.goods_sku;
         this.edit = !options.edit;
         this.getGoodsDetail();

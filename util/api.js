@@ -101,3 +101,19 @@ export function orderList(pageNum, pageSize) {
         }
     })
 }
+// 订单详细
+export function orderInfo(id) {
+    return request({
+        url: `/orders/info/${id}`,
+        method: 'get',
+        data: {}
+    })
+}
+// 获取订单数
+export function orderCount() {
+    return request({
+        url: '/orders/count',
+        method: 'get',
+        data: {}
+    })
+}

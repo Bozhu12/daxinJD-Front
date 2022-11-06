@@ -17,6 +17,7 @@
                     shape="circle"
                     text="订单详细"
                     customStyle="padding: 16px 32rpx; height: 30px;"
+                    @click="gotoOrderInfo"
                 ></u-button>
             </view>
         </view>
@@ -45,6 +46,13 @@ export default {
             //     goodsCount: 4
             // }
         };
+    },
+    methods: {
+        gotoOrderInfo() {
+            uni.navigateTo({
+                url: '../../subpkg/order_info/order_info?orderId=' + this.order.id
+            });
+        }
     }
 };
 </script>

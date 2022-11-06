@@ -16,7 +16,7 @@
                             <text>我的收藏</text>
                         </view>
                         <view class="panel-item" @click="gotoOrderList">
-                            <text>32</text>
+                            <text>{{ orderCount }}</text>
                             <text>我的订单</text>
                         </view>
                         <view class="panel-item">
@@ -55,10 +55,13 @@
 <script>
 import {mapState, mapMutations} from 'vuex';
 import badgeMix from '@/mixins/tabbar-badge.js';
+import {orderCount} from '@/util/api.js';
 export default {
     mixins: [badgeMix],
     data() {
-        return {};
+        return {
+            orderCount: 0
+        };
     },
     computed: {
         ...mapState('m_user', ['token', 'userinfo', 'collection'])
@@ -85,10 +88,17 @@ export default {
                 url: '../../subpkg/order_list/order_list'
             });
         },
+        async loadOrderCount() {
+            let res = await orderCount();
+            this.orderCount = res.count;
+        },
         outLogin() {
             this.updateToken('');
             uni.$showMsg('退出成功');
         }
+    },
+    onLoad() {
+        this.loadOrderCount();
     }
 };
 </script>

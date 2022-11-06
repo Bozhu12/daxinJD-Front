@@ -85,7 +85,13 @@
             "style": {
                 "navigationBarTitleText": "",
                 "enablePullDownRefresh": false,
-                "onReachBottomDistance": 100
+                "onReachBottomDistance": 150
+            }
+        }, {
+            "path": "order_info/order_info",
+            "style": {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
             }
         }]
     }],

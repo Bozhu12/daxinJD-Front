@@ -26,7 +26,7 @@ export default {
         async loadData() {
             if (this.isloading) return;
             this.isloading = true;
-            let res = await orderList(1, 5);
+            let res = await orderList(this.page.pageNum, this.page.pageSize);
             this.orderList = [...this.orderList, ...res.list];
             this.isloading = false;
         }
