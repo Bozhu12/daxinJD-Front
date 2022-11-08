@@ -136,7 +136,7 @@ export default {
         }
     },
     onLoad(options) {
-        if (options.type === '' || options.type === undefined) {
+        if (options.type === undefined) {
             // 持久化数据提取
             this.historyList = JSON.parse(uni.getStorageSync('kw') || '[]');
         } else {

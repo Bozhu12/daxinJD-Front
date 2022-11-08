@@ -10,6 +10,7 @@ export default {
         };
     },
     onLoad(options) {
+        if (options.url === undefined) uni.navigateBack();
         this.targetUrl = options.url;
     }
 };

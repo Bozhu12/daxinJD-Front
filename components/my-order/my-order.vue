@@ -13,6 +13,15 @@
             </view>
             <view class="button-info">
                 <u-button
+                    v-if="showWithdraw"
+                    type="primary"
+                    shape="circle"
+                    color="#e1251b"
+                    text="撤回订单"
+                    customStyle="margin-right: 10rpx; padding: 16px 32rpx; height: 30px;"
+                    @click="modalShwo"
+                ></u-button>
+                <u-button
                     type="primary"
                     shape="circle"
                     text="订单详细"
@@ -21,20 +30,38 @@
                 ></u-button>
             </view>
         </view>
+        <u-modal
+            @confirm="withdrawalOrder"
+            @cancel="modalShwo"
+            :show="modal.show"
+            :title="modal.title"
+            :content="modal.content"
+            showCancelButton
+        ></u-modal>
     </view>
 </template>
 
 <script>
+import {withdrawalOrderEdit} from '@/util/api.js';
 export default {
     name: 'my-order',
     props: {
         order: {
             type: Object,
             default: null
+        },
+        showWithdraw: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
         return {
+            modal: {
+                show: false,
+                title: '温馨提示',
+                content: '确认撤回该订单记录?'
+            }
             // order: {
             //     id: 14,
             //     clientName: '钟果',
@@ -52,6 +79,15 @@ export default {
             uni.navigateTo({
                 url: '../../subpkg/order_info/order_info?orderId=' + this.order.id
             });
+        },
+        modalShwo() {
+            this.modal.show = !this.modal.show;
+        },
+        async withdrawalOrder() {
+            await withdrawalOrderEdit(this.order.id);
+            this.modal.show = !this.modal.show;
+            this.$emit('clearItem');
+            uni.$showMsg('撤回成功!');
         }
     }
 };
@@ -113,6 +149,8 @@ export default {
             }
         }
         .button-info {
+            display: flex;
+            justify-content: space-between;
         }
     }
 }

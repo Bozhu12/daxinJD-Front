@@ -193,7 +193,7 @@ export default {
     },
     // url参数
     onLoad(options) {
-        if (options.client_id === '' || options.client_id === undefined) return;
+        if (options.client_id === undefined) return;
         this.getClient(options.client_id);
     },
     onShow() {

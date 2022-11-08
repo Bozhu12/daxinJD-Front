@@ -17,10 +17,10 @@
                         </view>
                         <view class="panel-item" @click="gotoOrderList">
                             <text>{{ orderCount }}</text>
-                            <text>我的订单</text>
+                            <text>订单查看</text>
                         </view>
-                        <view class="panel-item">
-                            <text>32</text>
+                        <view class="panel-item" @click="gotoWithdrawOrderList">
+                            <text>{{ withdrawOrderCount }}</text>
                             <text>订单回退</text>
                         </view>
                     </view>
@@ -55,12 +55,13 @@
 <script>
 import {mapState, mapMutations} from 'vuex';
 import badgeMix from '@/mixins/tabbar-badge.js';
-import {orderCount} from '@/util/api.js';
+import {orderCount, withdrawalOrderCount} from '@/util/api.js';
 export default {
     mixins: [badgeMix],
     data() {
         return {
-            orderCount: 0
+            orderCount: 0,
+            withdrawOrderCount: 0
         };
     },
     computed: {
@@ -85,19 +86,26 @@ export default {
         },
         gotoOrderList() {
             uni.navigateTo({
-                url: '../../subpkg/order_list/order_list'
+                url: '../../subpkg/order_list/order_list?withdraw=0'
+            });
+        },
+        gotoWithdrawOrderList() {
+            uni.navigateTo({
+                url: '../../subpkg/order_list/order_list?withdraw=1'
             });
         },
         async loadOrderCount() {
             let res = await orderCount();
             this.orderCount = res.count;
+            let res2 = await withdrawalOrderCount();
+            this.withdrawOrderCount = res2.count;
         },
         outLogin() {
             this.updateToken('');
             uni.$showMsg('退出成功');
         }
     },
-    onLoad() {
+    onShow() {
         this.loadOrderCount();
     }
 };

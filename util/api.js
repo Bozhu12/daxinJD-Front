@@ -27,9 +27,9 @@ export function goodSearch(params) {
     })
 }
 // 查询 商品 按sku
-export function goodsDetail(params) {
+export function goodsDetail(sku) {
     return request({
-        url: `/goods/find/${params}`,
+        url: `/goods/find/${sku}`,
         method: 'get',
         data: {}
     })
@@ -66,7 +66,7 @@ export function clientGetById(params) {
         data: {}
     })
 }
-// 编辑客户(按id)
+// 客户编辑(按id)
 export function clienEditById(params) {
     return request({
         url: `/client/edit`,
@@ -74,7 +74,7 @@ export function clienEditById(params) {
         data: params
     })
 }
-// 删除客户(按id)
+// 客户删除(按id)
 export function clienDelById(params) {
     return request({
         url: `/client/del/${params}`,
@@ -109,10 +109,37 @@ export function orderInfo(id) {
         data: {}
     })
 }
-// 获取订单数
+// 订单数
 export function orderCount() {
     return request({
         url: '/orders/count',
+        method: 'get',
+        data: {}
+    })
+}
+// 订单 撤回数
+export function withdrawalOrderCount() {
+    return request({
+        url: '/orders/withdrawal/count',
+        method: 'get',
+        data: {}
+    })
+}
+// 订单 撤回 列表
+export function withdrawalOrderList(pageNum, pageSize) {
+    return request({
+        url: '/orders/withdrawal/list',
+        method: 'post',
+        data: {
+            pageNum,
+            pageSize
+        }
+    })
+}
+// 订单 撤回 操作
+export function withdrawalOrderEdit(orderId) {
+    return request({
+        url: `/orders/withdrawal/edit/${orderId}`,
         method: 'get',
         data: {}
     })

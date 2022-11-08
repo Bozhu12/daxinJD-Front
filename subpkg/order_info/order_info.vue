@@ -75,10 +75,7 @@ export default {
         }
     },
     onLoad(options) {
-        if (options.orderId === null || options.orderId === undefined) {
-            uni.navigateBack();
-            return;
-        }
+        if (options.orderId === undefined) uni.navigateBack();
         this.loadData(options.orderId);
     }
 };

@@ -174,7 +174,7 @@ export default {
     },
     onLoad(options) {
         this.getClientList();
-        if (options.selected === '' || options.selected === undefined) this.selected = false;
+        if (options.selected === undefined) this.selected = false;
         if (options.selected === 'true') this.selected = true;
     },
     onShow() {
