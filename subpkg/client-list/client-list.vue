@@ -1,19 +1,8 @@
 <template>
     <view class="client-list-box">
         <!-- 搜索 -->
-        <view class="search-box">
-            <!-- 搜索 -->
-            <view class="search-content">
-                <u-search
-                    focus
-                    v-model="kw"
-                    bgColor="#ffffff"
-                    placeholder="请输入 客户 姓名/手机号"
-                    @custom="scanClient"
-                    @search="scanClient"
-                ></u-search>
-            </view>
-        </view>
+
+        <my-search @search="scanClient" :inputData="kw" :placeholder="'请输入 客户 姓名/手机号'"></my-search>
         <!-- 客户列表 -->
         <u-index-list inactiveColor="transparent" activeColor="transparent" :index-list="indexList">
             <u-swipe-action>
@@ -158,7 +147,8 @@ export default {
                 uni.$showMsg('删除成功');
             }
         },
-        scanClient() {
+        scanClient(input) {
+            this.kw = input;
             if (this.kw == '') {
                 this.getClientList();
                 return;
@@ -185,23 +175,6 @@ export default {
 
 <style lang="scss" scoped>
 .client-list-box {
-    .search-box {
-        position: sticky;
-        top: 0;
-        z-index: 999;
-        background-color: #e1251b;
-        height: 42px;
-        padding: 0 10px;
-        align-items: center;
-
-        .search-content {
-            height: 36px;
-            border-radius: 16px;
-            padding: 0 4px;
-            background-color: #ffffff;
-        }
-    }
-
     .list-cell {
         display: flex;
         box-sizing: border-box;

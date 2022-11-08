@@ -1,7 +1,16 @@
 <template>
     <view class="home-box">
         <!-- 搜索 -->
-        <view class="search-box"><my-search @my-click="gotoSearch" :bgcolor="'#e1251b'"></my-search></view>
+        <view class="search-box">
+            <!-- <my-search @my-click="gotoSearch" :bgcolor="'#e1251b'"></my-search> -->
+            <view class="my-search-container" @click="gotoSearch">
+                <!-- 搜索 input 输入-->
+                <view class="my-search-box">
+                    <uni-icons type="search" size="17"></uni-icons>
+                    <text class="placeholder">搜索商品</text>
+                </view>
+            </view>
+        </view>
         <!-- 公告 -->
         <view class="announcementMsg"><u-notice-bar :text="announcementMsg" direction="column"></u-notice-bar></view>
         <!-- 分类 -->
@@ -137,7 +146,11 @@ export default {
                 url: '../../subpkg/client-list/client-list?selected=false'
             });
         },
-        gotoQrCodeCreate() {},
+        gotoQrCodeCreate() {
+            uni.navigateTo({
+                url: '../../subpkg/generate_code/generate_code'
+            });
+        },
         scanQrCodeLast() {
             uni.navigateTo({
                 url: '../../subpkg/qrCode/qrCode'
@@ -154,6 +167,29 @@ export default {
 .home-box {
     .search-box {
         width: 100%;
+
+        .my-search-container {
+            background-color: #e1251b;
+            height: 42px;
+            padding: 0 10px;
+            display: flxe;
+            align-items: center;
+        }
+
+        .my-search-box {
+            height: 36px;
+            background-color: #ffffff;
+            border-radius: 16px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .placeholder {
+                font-size: 15px;
+                margin-left: 5px;
+            }
+        }
     }
 
     .editPanel {

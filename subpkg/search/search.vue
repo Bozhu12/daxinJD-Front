@@ -1,20 +1,12 @@
 <template>
     <view>
-        <view class="search-box">
-            <!-- 搜索 -->
-            <view class="search-content">
-                <u-search
-                    focus
-                    v-model="kw"
-                    bgColor="#ffffff"
-                    placeholder="请输入 关键字/商品SKU"
-                    @clickIcon="scanQrcode"
-                    @custom="input"
-                    searchIcon="scan"
-                    @search="input"
-                ></u-search>
-            </view>
-        </view>
+        <!-- 搜索 -->
+        <my-search
+            @search="input"
+            :inputData="kw"
+            :placeholder="'请输入 关键字/商品SKU'"
+            :searchIcon="'scan'"
+        ></my-search>
 
         <!-- 搜索历史 -->
         <view class="history-box" v-if="goodsList.length === 0 || searchResults === null">
@@ -113,12 +105,6 @@ export default {
             this.historyList.splice(i, 1);
             uni.setStorageSync('kw', JSON.stringify(this.historyList));
         },
-        // 扫码
-        async scanQrcode() {
-            let res = uni.scanCode();
-            if (res[0] != null) return uni.$showMsg('扫码异常!');
-            this.kw = res[1].result;
-        },
         // 触底 加页
         onReachBottom() {
             // 请求过程禁止继续加页
@@ -151,23 +137,6 @@ export default {
 </script>
 
 <style lang="scss">
-.search-box {
-    position: sticky;
-    top: 0;
-    z-index: 999;
-    background-color: #e1251b;
-    height: 42px;
-    padding: 0 10px;
-    align-items: center;
-
-    .search-content {
-        height: 36px;
-        border-radius: 16px;
-        padding: 0 4px;
-        background-color: #ffffff;
-    }
-}
-
 .history-box {
     padding: 0 5px;
 

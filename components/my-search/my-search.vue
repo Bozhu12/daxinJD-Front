@@ -1,9 +1,18 @@
 <template>
-    <view class="my-search-container" :style="{'background-color': bgcolor}" @click="searchBoxHandler">
-        <!-- 搜索 input 输入-->
-        <view class="my-search-box" :style="{'border-radius': radius + 'px'}">
-            <uni-icons type="search" size="17"></uni-icons>
-            <text class="placeholder">搜索商品</text>
+    <view class="my-search-box">
+        <!-- 搜索 -->
+        <view class="search-content">
+            <u-search
+                focus
+                v-model="kw"
+                bgColor="#ffffff"
+                :placeholder="placeholder"
+                @clickIcon="scanQrcode"
+                @custom="query"
+                :searchIcon="searchIcon"
+                @search="query"
+                :actionText="buttonText"
+            ></u-search>
         </view>
     </view>
 </template>
@@ -11,54 +20,62 @@
 <script>
 export default {
     props: {
-        bgcolor: {
+        inputData: {
             type: String,
-            default: '#d81e06'
+            default: ''
         },
-        radius: {
-            type: Number,
-            default: 16
+        placeholder: {
+            type: String,
+            default: '请输入内容'
+        },
+        searchIcon: {
+            tyep: String,
+            default: 'search'
+        },
+        buttonText: {
+            type: String,
+            default: '搜索'
         }
     },
     name: 'my-search',
     data() {
-        return {};
+        return {
+            kw: ''
+        };
     },
-    onLoad() {
-        const sysInfo = uni.getSystemInfoSync();
-        // 添加了搜索组件后 可用高度会减少因此需要手动减去高度 , 以防下拉不到问题
-        // 可用高度 = 屏幕高度 - navigationBar高度 - tabBar高度 - 自定义的search组件高度
-        this.wh = sysInfo.windowHeight - 42;
+    watch: {
+        inputData(newV, oldV) {
+            this.kw = newV;
+        }
     },
     methods: {
-        searchBoxHandler() {
-            this.$emit('my-click');
+        query() {
+            this.$emit('search', this.kw);
+        },
+        async scanQrcode() {
+            let res = await uni.scanCode();
+            if (res[0] != null) return uni.$showMsg('扫码异常!');
+            this.kw = res[1].result;
         }
     }
 };
 </script>
 
 <style lang="scss">
-.my-search-container {
-    // background-color: #d81e06;
+.my-search-box {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background-color: #e1251b;
     height: 42px;
     padding: 0 10px;
-    display: flxe;
     align-items: center;
-}
 
-.my-search-box {
-    height: 36px;
-    background-color: #ffffff;
-    // border-radius: 15px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .placeholder {
-        font-size: 15px;
-        margin-left: 5px;
+    .search-content {
+        height: 36px;
+        border-radius: 16px;
+        padding: 0 4px;
+        background-color: #ffffff;
     }
 }
 </style>
