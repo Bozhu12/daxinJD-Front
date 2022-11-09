@@ -4,9 +4,9 @@
         <my-search
             @search="input"
             :inputData="kw"
-            :placeholder="'请输入 sku 进行对商品添加'"
-            :searchIcon="'scan'"
-            :buttonText="'添加'"
+            placeholder="请输入 sku 进行对商品添加"
+            searchIcon="scan"
+            buttonText="添加"
         ></my-search>
 
         <!-- 模板选择 -->
@@ -39,10 +39,15 @@
 
         <!-- 生成按钮 -->
         <view class="generate-submit-buttom">
-            <u-button class="custom-style" type="success" text="打印生成" size="large"></u-button>
+            <u-button
+                class="custom-style"
+                type="success"
+                text="打印生成"
+                size="large"
+                @click="modal.show = !modal.show"
+            ></u-button>
         </view>
 
-        <!-- 提示 -->
         <!-- 编辑框 -->
         <u-popup :show="editGoods.show" :round="10" mode="bottom" closeable @close="editGoods.show = !editGoods.show">
             <view class="goods-edit">
@@ -64,6 +69,18 @@
                 <u-button type="success" size="large" text="确定" @click="editSubmit"></u-button>
             </view>
         </u-popup>
+
+        <!-- 生成提示 -->
+        <u-modal
+            cancelText="否"
+            confirmText="是"
+            showCancelButton
+            :show="modal.show"
+            :title="modal.title"
+            :content="modal.content"
+            @cancel="modal.show = !modal.show"
+            @confirm=""
+        ></u-modal>
     </view>
 </template>
 
@@ -72,6 +89,11 @@ import {goodsDetail} from '@/util/api.js';
 export default {
     data() {
         return {
+            modal: {
+                show: false,
+                title: '生成提示',
+                content: '是否对以下SKU进行生成识别码?'
+            },
             editGoods: {
                 index: -1,
                 selected: '',

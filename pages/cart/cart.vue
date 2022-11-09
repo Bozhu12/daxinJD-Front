@@ -77,7 +77,13 @@
                     text="备注"
                     @click="remarkShow = !remarkShow"
                 ></u-button>
-                <u-button type="success" icon="shopping-cart" size="large" text="结算" @click="settleOrder"></u-button>
+                <u-button
+                    type="success"
+                    icon="shopping-cart"
+                    size="large"
+                    text="结算"
+                    @click="confirmSettlement"
+                ></u-button>
             </view>
         </view>
 
@@ -91,6 +97,18 @@
                 <u-button type="success" size="large" text="确定" @click="remarkShow = !remarkShow"></u-button>
             </view>
         </u-popup>
+
+        <!-- 生成提示 -->
+        <u-modal
+            showCancelButton
+            :show="modal.show"
+            :title="modal.title"
+            :content="modal.content"
+            closeOnClickOverlay
+            @cancel="closeModal"
+            @close="closeModal"
+            @confirm="settleOrder"
+        ></u-modal>
     </view>
 </template>
 
@@ -111,9 +129,15 @@ export default {
     },
     data() {
         return {
+            modal: {
+                show: false,
+                title: '请确认购物车商品!',
+                content: ''
+            },
             client: '',
             orderRemark: '',
             remarkShow: false,
+            arrdto: [],
             options: [
                 {
                     text: '删除',
@@ -166,29 +190,58 @@ export default {
                 }
             });
         },
-        async settleOrder() {
-            let arr = [];
+        confirmSettlement() {
+            // 判断是否选择客户
+            if (this.client === '' || this.client === undefined) {
+                uni.$showMsg('请选择客户!');
+                return;
+            }
+            if (this.cart.length === 0) {
+                uni.$showMsg('请选择商品!');
+                return;
+            }
+            this.modal.content += `
+                销售名称: ${this.userinfo.userName}
+                客户名称: ${this.client.clientName}
+                派送地址: ${this.client.clientAddress}\n
+                商品列表信息: 
+                `;
             let cartList = this.cart;
             for (let i = 0; cartList.length > i; i++) {
-                arr[i] = {
+                this.arrdto[i] = {
                     goodsId: cartList[i].goodsId,
                     goodsCount: cartList[i].goodsCount,
                     goodsPrice: cartList[i].goodsPrice
                 };
+                this.modal.content += `${
+                    cartList[i].goodsName === ' '
+                        ? cartList[i].goodsTitem.slice(0, 13) + `...  `
+                        : cartList[i].goodsName
+                }   ${cartList[i].goodsPrice}￥  x${cartList[i].goodsCount}
+                `;
             }
+            this.modal.content += `\n总计: ${this.checkedGoodsAmount}￥`;
+            this.modal.show = !this.modal.show;
+        },
+        async settleOrder() {
             let res = await orderSubmit({
                 orderPrice: this.checkedGoodsAmount,
                 clientId: this.client.id,
                 userId: this.userinfo.id,
                 orderRemark: this.orderRemark,
-                goodsList: arr
+                goodsList: this.arrdto
             });
+            this.closeModal();
             this.submitCart();
-            // console.log(res);
             this.client = '';
             uni.switchTab({
                 url: '/pages/my/my'
             });
+        },
+        closeModal() {
+            this.modal.show = !this.modal.show;
+            this.modal.content = '';
+            this.arrdto = [];
         }
     },
     // url参数
