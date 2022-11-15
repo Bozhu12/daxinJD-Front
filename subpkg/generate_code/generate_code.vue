@@ -11,7 +11,13 @@
 
         <!-- 模板选择 -->
         <view class="generate-template-buttom">
-            <u-button class="custom-style" type="primary" text="选择打印生成模板" size="large"></u-button>
+            <u-button
+                class="custom-style"
+                type="primary"
+                :text="templateNum === -1 ? '选择打印生成模板' : `模板${templateNum + 1}  (点击更改模板)`"
+                size="large"
+                @click="selectPrintTemplate"
+            ></u-button>
         </view>
 
         <!-- 码列表 -->
@@ -79,20 +85,25 @@
             :title="modal.title"
             :content="modal.content"
             @cancel="modal.show = !modal.show"
-            @confirm=""
+            @confirm="print"
         ></u-modal>
     </view>
 </template>
 
 <script>
 import {goodsDetail} from '@/util/api.js';
+import {mapState} from 'vuex';
 export default {
+    computed: {
+        ...mapState('m_print', ['printConfig', 'models']),
+    },
     data() {
         return {
+            templateNum: -1,
             modal: {
                 show: false,
                 title: '生成提示',
-                content: '是否对以下SKU进行生成识别码?'
+                content: '确定打印进行打印?',
             },
             editGoods: {
                 index: -1,
@@ -100,7 +111,7 @@ export default {
                 show: false,
                 sku: '',
                 msg1: '',
-                msg2: ''
+                msg2: '',
             },
             kw: '',
             goodsList: [],
@@ -108,16 +119,16 @@ export default {
                 {
                     text: '编辑',
                     style: {
-                        backgroundColor: '#f9ae3d'
-                    }
+                        backgroundColor: '#f9ae3d',
+                    },
                 },
                 {
                     text: '删除',
                     style: {
-                        backgroundColor: '#e1251b'
-                    }
-                }
-            ]
+                        backgroundColor: '#e1251b',
+                    },
+                },
+            ],
         };
     },
     methods: {
@@ -135,11 +146,11 @@ export default {
                 uni.$showMsg('sku必须为数值!');
                 return false;
             }
-            let res = this.goodsList.find(e => e.goodsSku === sku);
-            if (res !== undefined) {
-                uni.$showMsg('该sku已经有啦!');
-                return false;
-            }
+            // let res = this.goodsList.find(e => e.goodsSku === sku);
+            // if (res !== undefined) {
+            //     uni.$showMsg('该sku已经有啦!');
+            //     return false;
+            // }
             return true;
         },
         async loadList(sku) {
@@ -151,10 +162,11 @@ export default {
             this.kw = '';
         },
         async scanQrCode() {
-            let scanVal = await uni.scanCode();
-            if (scanVal[0] != null) return uni.$showMsg('扫码异常!');
-            if (!this.verifySku(scanVal[1].result)) return;
-            this.loadList(scanVal[1].result);
+            let [err, res] = await uni.scanCode();
+            if (err != null) return uni.$showMsg('扫码异常!');
+            let sku = uni.$parsingQrCode(res.result);
+            if (!this.verifySku(sku)) return;
+            this.loadList(sku);
         },
         swipeActionClickHandler(options, goods, index) {
             // options.index 0 => 编辑
@@ -185,8 +197,43 @@ export default {
             this.editGoods.selected = {};
             this.editGoods.index = -1;
             uni.$showMsg('编辑成功');
-        }
-    }
+        },
+        selectPrintTemplate() {
+            uni.navigateTo({
+                url: '../../subpkg/print_template/print_template',
+            });
+        },
+        // 打印操作
+        print() {
+            this.modal.show = !this.modal.show;
+            // 打印机参数
+            // console.log(this.printConfig);
+            // 打印模板数据
+            // console.log(this.models[this.templateNum]);
+            // 物品数量
+            // console.log(this.goodsList);
+            let modelArray = [];
+            let model = {...this.models[this.templateNum]};
+            for (var i = 0; i < this.goodsList.length; i++) {
+                modelArray[i] = JSON.parse(JSON.stringify(model));
+                modelArray[i].qrCode.value = uni.$packQrCode(this.goodsList[i].goodsSku);
+                modelArray[i].title.value = this.goodsList[i].msg1;
+                modelArray[i].text.value = this.goodsList[i].msg2;
+            }
+
+            // 装配数据
+            let printData = {
+                printConfig: this.printConfig,
+                modelArray,
+            };
+            console.log(printData);
+        },
+    },
+    onLoad(options) {
+        if (options.templateNum === undefined) return;
+        // 在数组中下标从0开始的因此-1
+        this.templateNum = options.templateNum - 1;
+    },
 };
 </script>
 
@@ -197,7 +244,7 @@ export default {
     .goodslist {
     }
     .scan-addCode-buttom {
-        margin: 40px;
+        margin: 10px 40px 60px 40px;
     }
 
     .generate-submit-buttom {

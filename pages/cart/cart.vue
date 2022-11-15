@@ -159,9 +159,10 @@ export default {
             this.removeGoodsById(goods.goodsId);
         },
         async scanQrCode() {
-            let scanVal = await uni.scanCode();
-            if (scanVal[0] != null) return uni.$showMsg('扫码异常!');
-            let res = await goodsDetail(scanVal[1].result);
+            let [err, scanVal] = await uni.scanCode();
+            if (err != null) return uni.$showMsg('扫码异常!');
+            let sku = uni.$parsingQrCode(scanVal.result);
+            let res = await goodsDetail(sku);
             this.addToCart({
                 goodsId: res.data.id,
                 goodsTitem: res.data.goodsTitle,

@@ -53,9 +53,9 @@ export default {
             this.$emit('search', this.kw);
         },
         async scanQrcode() {
-            let res = await uni.scanCode();
-            if (res[0] != null) return uni.$showMsg('扫码异常!');
-            this.kw = res[1].result;
+            let [err, res] = await uni.scanCode();
+            if (err != null) return uni.$showMsg('扫码异常!');
+            this.kw = uni.$parsingQrCode(res.result);
         }
     }
 };

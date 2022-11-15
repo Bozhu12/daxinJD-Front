@@ -57,19 +57,18 @@ export default {
     props: {
         goods: {
             type: Object,
-            default: {}
+            default: {},
         },
         addShow: {
             type: Boolean,
-            default: true
-        }
+            default: true,
+        },
     },
     data() {
         return {
-            jdUrl: 'http://item.jd.com/',
             // 默认的空图片
             defaultPic:
-                'https://img3.doubanio.com/f/movie/8dd0c794499fe925ae2ae89ee30cd225750457b4/pics/movie/celebrity-default-medium.png'
+                'https://img3.doubanio.com/f/movie/8dd0c794499fe925ae2ae89ee30cd225750457b4/pics/movie/celebrity-default-medium.png',
         };
     },
     methods: {
@@ -83,12 +82,12 @@ export default {
                 },
                 fail: function() {
                     uni.$showMsg('拷了个寂寞!?');
-                }
+                },
             });
         },
         gotoGoodsInfo(sku) {
             uni.navigateTo({
-                url: `../goods_info/goods_info?goods_sku=${sku}&edit=true`
+                url: `../goods_info/goods_info?goods_sku=${sku}&edit=true`,
             });
         },
         addGoods() {
@@ -99,20 +98,20 @@ export default {
                 goodsPrice: this.goods.goodsPrice,
                 goodsSmallPrice: this.goods.goodsSmallPrice || 0,
                 goodsCount: 1,
-                goodsSmallLogo: this.goods.goodsSmallLogo
+                goodsSmallLogo: this.goods.goodsSmallLogo,
             });
             uni.$showMsg('添加成功', 1000);
         },
         gotoJdPage() {
-            let url = this.jdUrl + this.goods.goodsSku + '.html';
+            let url = uni.$packQrCode(this.goods.goodsSku);
             uni.navigateTo({
-                url: `../webview/webview?url=${url}`
+                url: `../webview/webview?url=${url}`,
             });
         },
         delCollection() {
             this.$emit('clear');
-        }
-    }
+        },
+    },
 };
 </script>
 

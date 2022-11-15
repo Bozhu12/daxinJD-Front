@@ -35,11 +35,11 @@ export function goodsDetail(sku) {
     })
 }
 // 查询 商品 按sku (批量)
-export function goodsFindBySkus(params) {
+export function goodsFindBySkus(skus) {
     return request({
         url: `/goods/find/sku`,
         method: 'post',
-        data: params
+        data: { skus }
     })
 }
 // 修改 商品

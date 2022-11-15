@@ -130,10 +130,11 @@ export default {
             });
         },
         async scanQrCode() {
-            let scanVal = await uni.scanCode();
-            if (scanVal[0] != null) return uni.$showMsg('扫码异常!');
+            let [err, res] = await uni.scanCode();
+            if (err != null) return uni.$showMsg('扫码异常!');
+            let sku = uni.$parsingQrCode(res.result);
             uni.navigateTo({
-                url: `../../subpkg/goods_info/goods_info?goods_sku=${scanVal[1].result}&edit=true`
+                url: `../../subpkg/goods_info/goods_info?goods_sku=${sku}&edit=true`
             });
         },
         gotoFindByType(e) {

@@ -20,15 +20,15 @@ export default {
     },
     data() {
         return {
-            goodsList: []
+            goodsList: [],
+            skus: []
         };
     },
     methods: {
         ...mapMutations('m_user', ['deleteCollection']),
         async loadGoodsList() {
-            let res = await goodsFindBySkus({
-                skus: this.collection
-            });
+            if (this.skus.length === 0) return;
+            let res = await goodsFindBySkus(this.skus);
             this.goodsList = res.list;
         },
         delCollection(i) {
@@ -36,8 +36,9 @@ export default {
             this.deleteCollection(i);
         }
     },
-    onLoad() {
+    onShow() {
         if (this.collection.length === 0) return;
+        this.skus = this.collection;
         this.loadGoodsList();
     }
 };

@@ -99,7 +99,16 @@
                 "navigationBarTitleText": "",
                 "enablePullDownRefresh": false
             }
-        }]
+        }    ,{
+                    "path" : "print_template/print_template",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
     }],
     "tabBar": {
         "selectedColor": "#C00000",
