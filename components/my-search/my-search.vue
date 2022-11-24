@@ -1,69 +1,80 @@
 <template>
-
-    <view class="my-search-container" :style="{ 'background-color': bgcolor }" @click="searchBoxHandler">
-        <!-- 搜索 input 输入-->
-        <view class="my-search-box" :style="{ 'border-radius': radius+'px'}">
-            <uni-icons type="search" size="17"></uni-icons>
-            <text class="placeholder">搜索</text>
+    <view class="my-search-box">
+        <!-- 搜索 -->
+        <view class="search-content">
+            <u-search
+                v-model="kw"
+                bgColor="#ffffff"
+                :placeholder="placeholder"
+                @clickIcon="scanQrcode"
+                @custom="query"
+                :searchIcon="searchIcon"
+                @search="query"
+                :actionText="buttonText"
+            ></u-search>
         </view>
     </view>
-
 </template>
 
 <script>
-    export default {
-        props: {
-            bgcolor: {
-                type: String,
-                default: '#d81e06'
-            },
-            radius: {
-                type: Number,
-                default: 16
-            }
+export default {
+    props: {
+        inputData: {
+            type: String,
+            default: '',
         },
-        name: "my-search",
-        data() {
-            return {
-
-            };
+        placeholder: {
+            type: String,
+            default: '请输入内容',
         },
-        onLoad() {
-            const sysInfo = uni.getSystemInfoSync()
-            // 添加了搜索组件后 可用高度会减少因此需要手动减去高度 , 以防下拉不到问题
-            // 可用高度 = 屏幕高度 - navigationBar高度 - tabBar高度 - 自定义的search组件高度
-            this.wh = sysInfo.windowHeight - 42
+        searchIcon: {
+            tyep: String,
+            default: 'search',
         },
-        methods: {
-            searchBoxHandler() {
-                this.$emit('my-click')
-            }
-        }
-
-    }
+        buttonText: {
+            type: String,
+            default: '搜索',
+        },
+    },
+    name: 'my-search',
+    data() {
+        return {
+            kw: '',
+        };
+    },
+    watch: {
+        inputData(newV, oldV) {
+            this.kw = newV;
+        },
+    },
+    methods: {
+        query() {
+            this.$emit('search', this.kw);
+        },
+        async scanQrcode() {
+            let [err, res] = await uni.scanCode();
+            if (err != null) return uni.$showMsg('扫码异常!');
+            this.kw = uni.$parsingQrCode(res.result);
+        },
+    },
+};
 </script>
 
 <style lang="scss">
-    .my-search-container {
-        // background-color: #d81e06;
-        height: 42px;
-        padding: 0 10px;
-        display: flxe;
-        align-items: center;
-    }
+.my-search-box {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background-color: #e1251b;
+    height: 42px;
+    padding: 0 10px;
+    align-items: center;
 
-    .my-search-box {
+    .search-content {
         height: 36px;
+        border-radius: 16px;
+        padding: 0 4px;
         background-color: #ffffff;
-        // border-radius: 15px;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        .placeholder {
-            font-size: 15px;
-            margin-left: 5px;
-        }
     }
+}
 </style>

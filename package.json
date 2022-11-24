@@ -1,9 +1,12 @@
 {
-  "devDependencies": {
-    "sass": "^1.55.0",
-    "sass-loader": "^13.0.2"
-  },
-  "dependencies": {
-    "@escook/request-miniprogram": "^0.2.1"
-  }
+    "devDependencies": {
+        "sass": "^1.55.0",
+        "sass-loader": "^13.0.2"
+    },
+    "dependencies": {
+        "@escook/request-miniprogram": "^0.2.1",
+        "javascript-obfuscator": "^4.0.0",
+        "sass": "^1.55.0",
+        "sass-loader": "^13.0.2"
+    }
 }
