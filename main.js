@@ -4,7 +4,7 @@ import { $http } from '@escook/request-miniprogram'
 // 解析二维码信息
 uni.$parsingQrCode = function (url) {
     // 去除 前缀/后缀
-    // https://item.jd.com/100005722048.html
+    // https://item.jd.com/100005722048.html 
     return url.match(/\d+/);
 }
 // 封装
@@ -14,19 +14,19 @@ uni.$packQrCode = function (sku) {
 // 封装信息提示
 uni.$showMsg = function (title = '成功', duration = 2000) {
     uni.showToast({
-        title,
-        duration,
-        icon: 'none',
-    })
+        title
+        , duration
+        , icon: 'none'
+    , })
 }
 // 跳转登录
 uni.$verifyLogin = function (title = '请进行登录') {
     if (!store.state.m_user.token) {
         uni.showToast({
-            title,
-            duration: 2000,
-            icon: 'none',
-        })
+            title
+            , duration: 2000
+            , icon: 'none'
+        , })
         setTimeout(() => {
             uni.switchTab({
                 url: '/pages/my/my'
@@ -48,8 +48,8 @@ import store from './store/store.js'
 Vue.prototype.$store = store
 Vue.use(uView)
 const app = new Vue({
-    ...App,
-    store
+    ...App
+    , store
 })
 app.$mount()
 // #endif

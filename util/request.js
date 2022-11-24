@@ -1,14 +1,15 @@
 // 从vuex中获取登录凭证
 let token = '';
-let server_url = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'http://***/api';
+let server_url = process.env.NODE_ENV === 'development' ? 'https://bozhu.free.svipss.top' : 'https://bozhu.free.svipss.top';
+// let server_url = 'https://bozhu.free.svipss.top';
 import store from '@/store/store.js';
 
 function service(options = {}) {
     uni.showLoading({
         title: '加载中...'
-    });
+    }); 
     // 认证
-    if (options.url !== '/user/login') {
+    if (options.url !== '/user/login') { 
         token = store.state.m_user.token;
         // 配置请求头
         options.header = {

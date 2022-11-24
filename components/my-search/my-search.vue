@@ -3,7 +3,6 @@
         <!-- 搜索 -->
         <view class="search-content">
             <u-search
-                focus
                 v-model="kw"
                 bgColor="#ffffff"
                 :placeholder="placeholder"
@@ -22,31 +21,31 @@ export default {
     props: {
         inputData: {
             type: String,
-            default: ''
+            default: '',
         },
         placeholder: {
             type: String,
-            default: '请输入内容'
+            default: '请输入内容',
         },
         searchIcon: {
             tyep: String,
-            default: 'search'
+            default: 'search',
         },
         buttonText: {
             type: String,
-            default: '搜索'
-        }
+            default: '搜索',
+        },
     },
     name: 'my-search',
     data() {
         return {
-            kw: ''
+            kw: '',
         };
     },
     watch: {
         inputData(newV, oldV) {
             this.kw = newV;
-        }
+        },
     },
     methods: {
         query() {
@@ -56,8 +55,8 @@ export default {
             let [err, res] = await uni.scanCode();
             if (err != null) return uni.$showMsg('扫码异常!');
             this.kw = uni.$parsingQrCode(res.result);
-        }
-    }
+        },
+    },
 };
 </script>
 

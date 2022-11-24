@@ -154,9 +154,11 @@ export default {
     methods: {
         ...mapMutations('m_print', ['updatePrintConfig']),
         selecteTemplate(index) {
-            uni.redirectTo({
-                url: `../../subpkg/generate_code/generate_code?templateNum=${index}`,
-            });
+            uni.$emit('number' , index);
+            uni.navigateBack();
+            // uni.redirectTo({
+            //     url: `../../subpkg/generate_code/generate_code?templateNum=${index}`,
+            // });
         },
         // 打开选择器
         openSelect(type) {

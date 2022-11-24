@@ -149,7 +149,7 @@ export default {
         },
         gotoQrCodeCreate() {
             uni.navigateTo({
-                url: '../../subpkg/generate_code/generate_code'
+                url: '../../subpkg/generate_code/generate_code?templateNum=-1'
             });
         },
         scanQrCodeLast() {

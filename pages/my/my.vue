@@ -61,40 +61,41 @@ export default {
     data() {
         return {
             orderCount: 0,
-            withdrawOrderCount: 0
+            withdrawOrderCount: 0,
         };
     },
     computed: {
-        ...mapState('m_user', ['token', 'userinfo', 'collection'])
+        ...mapState('m_user', ['token', 'userinfo', 'collection']),
     },
     methods: {
         ...mapMutations('m_user', ['updateToken']),
         gotoRegister() {
             uni.navigateTo({
-                url: '/subpkg/register/register'
+                url: '/subpkg/register/register',
             });
         },
         gotoLogin() {
             uni.navigateTo({
-                url: '/subpkg/login/login'
+                url: '/subpkg/login/login',
             });
         },
         gotoGoodsList() {
             uni.navigateTo({
-                url: '../../subpkg/goods_list/goods_list'
+                url: '../../subpkg/goods_list/goods_list',
             });
         },
         gotoOrderList() {
             uni.navigateTo({
-                url: '../../subpkg/order_list/order_list?withdraw=0'
+                url: '../../subpkg/order_list/order_list?withdraw=0',
             });
         },
         gotoWithdrawOrderList() {
             uni.navigateTo({
-                url: '../../subpkg/order_list/order_list?withdraw=1'
+                url: '../../subpkg/order_list/order_list?withdraw=1',
             });
         },
         async loadOrderCount() {
+            if (!this.token) return;
             let res = await orderCount();
             this.orderCount = res.count;
             let res2 = await withdrawalOrderCount();
@@ -103,11 +104,11 @@ export default {
         outLogin() {
             this.updateToken('');
             uni.$showMsg('退出成功');
-        }
+        },
     },
     onShow() {
         this.loadOrderCount();
-    }
+    },
 };
 </script>
 
