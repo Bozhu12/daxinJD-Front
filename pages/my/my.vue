@@ -3,7 +3,7 @@
         <!-- 内容 -->
         <view v-if="token" class="my-userinfo-contatiner">
             <!-- 头像区域 -->
-            <view class="top-box">
+            <view class="top-box" @click="opAdmin">
                 <image :src="userinfo.avatarUrl" class="avatar"></image>
                 <view class="nickname">{{ userinfo.nickName }}</view>
             </view>
@@ -46,9 +46,17 @@
 
         <!-- 未登录 -->
         <view class="login" v-if="!token">
-            <u-button text="注册" @click="gotoRegister" type="warning" size="large"></u-button>
+            <!-- <u-button text="注册" @click="gotoRegister" type="warning" size="large"></u-button> -->
             <u-button text="登录" @click="gotoLogin" type="success" size="large"></u-button>
         </view>
+        
+        <!-- 管理后台 -->
+        <u-popup :show="admin.openShow" :round="10" mode="top" @close="admin.openShow = !admin.openShow">
+            API : {{admin.apiurl}}
+            <u-input v-model="admin.kw"></u-input>
+            <u-button @click="adminEdit">提交</u-button>
+        </u-popup>
+        
     </view>
 </template>
 
@@ -62,6 +70,12 @@ export default {
         return {
             orderCount: 0,
             withdrawOrderCount: 0,
+            admin:{
+                open:0,
+                openShow:false,
+                apiurl:'',
+                kw:''
+            }
         };
     },
     computed: {
@@ -105,8 +119,20 @@ export default {
             this.updateToken('');
             uni.$showMsg('退出成功');
         },
+        opAdmin(){
+            this.admin.open++;
+            if(this.admin.open>=10){
+                this.admin.openShow = !this.admin.openShow;
+                this.admin.open = 0;
+            }
+        },
+        adminEdit(){
+            this.admin.openShow = !this.admin.openShow;
+            uni.$api = this.admin.kw;
+        }
     },
     onShow() {
+        this.admin.apiurl = uni.$api;
         this.loadOrderCount();
     },
 };

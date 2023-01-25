@@ -148,7 +148,8 @@ export default {
                 goodsPrice: this.goods_info.goodsPrice,
                 goodsSmallPrice: this.goods_info.goodsSmallPrice || 0,
                 goodsCount: 1,
-                goodsSmallLogo: this.goods_info.goodsSmallLogo
+                goodsSmallLogo: this.goods_info.goodsSmallLogo,
+                goodsSku: this.goods_info.goodsSku
             });
             uni.$showMsg('添加成功', 1000);
             uni.navigateBack();

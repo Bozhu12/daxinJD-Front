@@ -58,6 +58,14 @@ export function clientList() {
         , data: {}
     })
 }
+// 添加客户
+export function clientAdd(paarams){
+    return request({
+        url: `/client/add`,
+        method: 'post',
+        data: paarams
+    })
+}
 // 查询 客户 按id
 export function clientGetById(params) {
     return request({

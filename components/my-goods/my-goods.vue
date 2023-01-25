@@ -99,6 +99,7 @@ export default {
                 goodsSmallPrice: this.goods.goodsSmallPrice || 0,
                 goodsCount: 1,
                 goodsSmallLogo: this.goods.goodsSmallLogo,
+                goodsSku: this.goods.goodsSku
             });
             uni.$showMsg('添加成功', 1000);
         },

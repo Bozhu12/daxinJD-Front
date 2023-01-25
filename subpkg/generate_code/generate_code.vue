@@ -189,17 +189,24 @@ export default {
         input(v) {
             this.kw = v;
             if (!this.verifySku(this.kw)) return;
-            this.loadList(this.kw);
+            // 多个分割添加
+            if(v.indexOf(',') == -1){
+                this.loadList(this.kw);
+            }else{
+                v.split(',').forEach(e =>{
+                    this.loadList(e);
+                })
+            }
         },
         verifySku(sku) {
             if (sku === '') {
                 uni.$showMsg('sku不能为空!');
                 return false;
             }
-            if (!/^\d*$/.test(sku)) {
-                uni.$showMsg('sku必须为数值!');
-                return false;
-            }
+            // if (!/^\d*$/.test(sku)) {
+            //     uni.$showMsg('sku必须为数值!');
+            //     return false;
+            // }
             // let res = this.goodsList.find(e => e.goodsSku === sku);
             // if (res !== undefined) {
             //     uni.$showMsg('该sku已经有啦!');

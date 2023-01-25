@@ -32,6 +32,15 @@ export default {
             let res = await orderList(this.page.pageNum, this.page.pageSize);
             this.orderList = [...this.orderList, ...res.list];
             this.isloading = false;
+            if(res.list.length == 0) {
+                uni.$showMsg("到底啦~")
+                this.page.pageNum -= 1;
+                return;
+            }
+            if(this.orderList.length < this.page.pageSize){
+                this.page.pageNum += 1;
+                this.loadData()
+            }
         },
         async loadWithdrawData() {
             if (this.isloading) return;
@@ -39,6 +48,15 @@ export default {
             let res = await withdrawalOrderList(this.page.pageNum, this.page.pageSize);
             this.orderList = [...this.orderList, ...res.list];
             this.isloading = false;
+            if(res.list.length == 0) {
+                uni.$showMsg("到底啦~")
+                this.page.pageNum -= 1;
+                return;
+            }
+            if(this.orderList.length < this.page.pageSize){
+                this.page.pageNum += 1;
+                this.loadWithdrawData()
+            }
         },
         clearItem(i) {
             this.orderList.splice(i, 1);
@@ -49,7 +67,11 @@ export default {
         // 请求过程禁止继续加页
         if (this.isloading) return;
         this.page.pageNum += 1;
-        this.loadData();
+        if(this.showWithdraw){
+            this.loadData();
+        }else{
+            this.loadWithdrawData();
+        }
     },
     onLoad(options) {
         if (options.withdraw === undefined) uni.navigateBack();

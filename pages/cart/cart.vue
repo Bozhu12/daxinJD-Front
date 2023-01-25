@@ -7,7 +7,8 @@
                 <text style="margin-left: 10px;">购物车</text>
             </view>
             <text style="color: #e1251b;" v-show="isShow">暂无选择客户</text>
-            <view style="width: 200rpx;">
+            <view style="width: 300rpx; display: flex;">
+                <u-button text="复制SKU" type="success" @click="copySKU"></u-button>
                 <u-button text="选择客户" type="success" @click="selectClient"></u-button>
             </view>
         </view>
@@ -125,14 +126,14 @@ export default {
         ...mapGetters('m_cart', ['checkedGoodsAmount']),
         isShow() {
             return isEmpty(this.client);
-        }
+        },
     },
     data() {
         return {
             modal: {
                 show: false,
                 title: '请确认购物车商品!',
-                content: ''
+                content: '',
             },
             client: '',
             orderRemark: '',
@@ -142,10 +143,10 @@ export default {
                 {
                     text: '删除',
                     style: {
-                        backgroundColor: '#e1251b'
-                    }
-                }
-            ]
+                        backgroundColor: '#e1251b',
+                    },
+                },
+            ],
         };
     },
     methods: {
@@ -170,13 +171,14 @@ export default {
                 goodsPrice: res.data.goodsPrice,
                 goodsSmallPrice: res.data.goodsSmallPrice || 0,
                 goodsCount: 1,
-                goodsSmallLogo: res.data.goodsSmallLogo
+                goodsSmallLogo: res.data.goodsSmallLogo,
+                goodsSku: res.data.goodsSku,
             });
             uni.$showMsg('添加成功', 1000);
         },
         selectClient() {
             uni.navigateTo({
-                url: '../../subpkg/client-list/client-list?selected=true'
+                url: '../../subpkg/client-list/client-list?selected=true',
             });
         },
         async getClient(id) {
@@ -188,7 +190,7 @@ export default {
                 phoneNumber: phone,
                 fail: e => {
                     uni.$showMsg(e);
-                }
+                },
             });
         },
         confirmSettlement() {
@@ -212,7 +214,7 @@ export default {
                 this.arrdto[i] = {
                     goodsId: cartList[i].goodsId,
                     goodsCount: cartList[i].goodsCount,
-                    goodsPrice: cartList[i].goodsPrice
+                    goodsPrice: cartList[i].goodsPrice,
                 };
                 this.modal.content += `${
                     cartList[i].goodsName === ' '
@@ -230,20 +232,31 @@ export default {
                 clientId: this.client.id,
                 userId: this.userinfo.id,
                 orderRemark: this.orderRemark,
-                goodsList: this.arrdto
+                goodsList: this.arrdto,
             });
             this.closeModal();
             this.submitCart();
             this.client = '';
             uni.switchTab({
-                url: '/pages/my/my'
+                url: '/pages/my/my',
             });
         },
         closeModal() {
             this.modal.show = !this.modal.show;
             this.modal.content = '';
             this.arrdto = [];
-        }
+        },
+        copySKU() {
+            let str = '';
+            this.cart.forEach(e => {
+                str += e.goodsSku + ',';
+            });
+            str = str.substring(0, str.length - 1);
+            uni.setClipboardData({
+                data: str,
+            });
+            uni.$showMsg("拷贝到手!")
+        },
     },
     // url参数
     onLoad(options) {
@@ -252,7 +265,7 @@ export default {
     },
     onShow() {
         uni.$verifyLogin();
-    }
+    },
 };
 </script>
 

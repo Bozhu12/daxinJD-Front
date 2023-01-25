@@ -1,10 +1,17 @@
 <template>
     <view class="client-list-box">
         <!-- 搜索 -->
-
         <my-search @search="scanClient" :inputData="kw" :placeholder="'请输入 客户 姓名/手机号'"></my-search>
         <!-- 客户列表 -->
         <u-index-list inactiveColor="transparent" activeColor="transparent" :index-list="indexList">
+            <!-- 添加用户 -->
+            <u-button
+                type="success"
+                :plain="true"
+                text="添加客户"
+                @click="operateShow=!operateShow; operateAddis =!operateAddis"
+            ></u-button>
+
             <u-swipe-action>
                 <template v-for="(item, index) in itemArr">
                     <u-index-item>
@@ -39,8 +46,10 @@
             :client="selectedClient"
             @showReversal="
                 operateShow = !operateShow;
-                selectedClient = '';
+                selectedClient = {};
+                operateAddis=false; 
             "
+            :add="operateAddis"
             @flushed="getClientList"
         ></my-popup-clientEdit>
     </view>
@@ -53,10 +62,11 @@ export default {
         return {
             selected: false,
             kw: '',
-            // 是否展示编辑窗口
+            // 是否展示编辑窗口 
             operateShow: false,
+            operateAddis: false,
             // 选择的客户
-            selectedClient: '',
+            selectedClient: {},
             // 遍历集合
             itemArr: [],
             cacheData: '',
@@ -64,15 +74,15 @@ export default {
                 {
                     text: '编辑',
                     style: {
-                        backgroundColor: '#f1a532'
-                    }
+                        backgroundColor: '#f1a532',
+                    },
                 },
                 {
                     text: '删除',
                     style: {
-                        backgroundColor: '#e1251b'
-                    }
-                }
+                        backgroundColor: '#e1251b',
+                    },
+                },
             ],
             indexList: [
                 '#',
@@ -101,8 +111,8 @@ export default {
                 'W',
                 'X',
                 'Y',
-                'Z'
-            ]
+                'Z',
+            ],
         };
     },
     methods: {
@@ -131,7 +141,7 @@ export default {
         },
         async selectClient(id) {
             uni.reLaunch({
-                url: `../../pages/cart/cart?client_id=${id}`
+                url: `../../pages/cart/cart?client_id=${id}`,
             });
         },
         async clientOperate(...props) {
@@ -160,7 +170,8 @@ export default {
                 return false;
             });
             this.itemArr = [[...arr]];
-        }
+        },
+        addClient() {},
     },
     onLoad(options) {
         this.getClientList();
@@ -169,7 +180,7 @@ export default {
     },
     onShow() {
         uni.$verifyLogin();
-    }
+    },
 };
 </script>
 

@@ -21,6 +21,7 @@ export default {
         scanItem(e) {},
         scanList(list) {
             this.reslist = list;
+            console.log(list);
         },
         onHide() {
             this.updateToscanData(this.reslist);

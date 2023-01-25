@@ -1,5 +1,6 @@
 import App from './App'
 import { $http } from '@escook/request-miniprogram'
+uni.$api = ['https://bozhu.free.svipss.top','http://192.168.20.233:8080'];
 // 全局变量
 // 解析二维码信息
 uni.$parsingQrCode = function (url) {
