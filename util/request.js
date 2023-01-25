@@ -1,64 +1,35 @@
-// 从vuex中获取登录凭证
-let token = '';
 // let server_url = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://bozhu.free.svipss.top';
-let server_urls = uni.$api;
-let num = 0;
-// let server_url = 'https://bozhu.free.svipss.top';
-import store from '@/store/store.js';
+let server_url = 'http://localhost:8080/api';
 
 function service(options = {}) {
+    let uri = options.url;
+    let isCookie = uri !== '/user/login';
+    // 添加cookie
+    if (isCookie) options.header = { 'cookie': uni.$store.state.m_user.cookie }
+    options.url = `${server_url}${options.url}`;
     uni.showLoading({
         title: '加载中...'
-    }); 
-    // 认证
-    if (options.url !== '/user/login') { 
-        token = store.state.m_user.token;
-        // 配置请求头
-        options.header = {
-            AccessToken: `${token}`
-        };
-    }
-    let uri = options.url;
-    // options.url = server_urls[num] + options.url;
+    });
     return new Promise((resolve, reject) => {
-        
         // 成功
         options.success = (res) => {
-            console.log("success :>",res);
+            // console.log("success :>", res);
             uni.hideLoading();
             // 请求成功
-            // console.log("请求结构 : "+res);
-            const code = Number(res.data.code);
-            if (code == 20000) {
-                resolve(res.data.response);
-            }else{
-                uni.$showMsg(`${res.data.message}`);
-                reject(res.data.message);
-            }
-            // if (Number(res.data.code) === 40100) {
-            //     setTimeout(() => {
-            //         uni.switchTab({
-            //             url: '/pages/my/my'
-            //         })
-            //     }, 2000);
-            // }
+            let code = Number(res.data.code);
+            // 报错弹窗
+            if (code != 20000) uni.$showMsg(`${res.data.message}`);
+            // 重新登录 (该uri检查登录状态,防止死循环)
+            if (code === 40100 && uri !== '/user/curr') uni.$verifyLogin();
+            // 登录存cookie
+            if (!isCookie) uni.$store.commit('m_user/updateCookie', res.cookies[0])
+            resolve(res.data.response);
         }
         //错误
         options.fail = (err) => {
             uni.hideLoading();
-            console.log("err :>",err);
-            num++;
-            if(server_urls.length > num){
-                options.url = `${server_urls[num]}${uri}`;
-                console.log("op.url :>", options);
-                console.log("num :>", num);
-                uni.request(options);
-            }else{
-                num--;
-                reject(err); //错误
-            }
+            console.log("err :>", err);
         }
-        options.url = `${server_urls[num]}${uri}`;
         uni.request(options);
     });
 }

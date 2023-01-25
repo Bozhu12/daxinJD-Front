@@ -1,8 +1,7 @@
 export default {
     namespaced: true,
     state: () => ({
-        // 用户登录成功有数据
-        token: uni.getStorageSync('token') || '',
+        cookie: uni.getStorageSync('cookie') || '',
         // 用户基本信息
         userinfo: JSON.parse(uni.getStorageSync('userinfo') || '{}'),
         // 收藏商品
@@ -32,14 +31,14 @@ export default {
         saveCollectionGoods(state) {
             uni.setStorageSync('collection', state.collection);
         },
-        // 更新 tocken
-        updateToken(state, token) {
-            state.token = token
-            this.commit('m_user/saveTokenToStorage')
+        // cookie 更新 
+        updateCookie(state, cookie) {
+            state.cookie = cookie
+            this.commit('m_user/saveCookie')
         },
-        saveTokenToStorage(state) {
-            uni.setStorageSync('token', state.token)
-        }
+        saveCookie(state) {
+            uni.setStorageSync('cookie', state.cookie)
+        },
     },
     getters: {}
 }

@@ -47,14 +47,14 @@ export default {
         return {};
     },
     methods: {
-        ...mapMutations('m_user', ['updateToken']),
+        // ...mapMutations('m_user', ['updateToken']),
         gotoGoodsList() {
             uni.navigateTo({
                 url: '../../subpkg/goods_list/goods_list'
             });
         },
         outLogin() {
-            this.updateToken('');
+            // this.updateToken('');
             uni.$showMsg('退出成功');
         }
     }

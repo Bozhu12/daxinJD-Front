@@ -1,7 +1,7 @@
 <template>
     <view class="my-box">
         <!-- 内容 -->
-        <view v-if="token" class="my-userinfo-contatiner">
+        <view v-if="isLogin" class="my-userinfo-contatiner">
             <!-- 头像区域 -->
             <view class="top-box" @click="opAdmin">
                 <image :src="userinfo.avatarUrl" class="avatar"></image>
@@ -41,48 +41,49 @@
             text="请进行登录!"
             mode="news"
             icon="http://cdn.uviewui.com/uview/empty/news.png"
-            v-if="!token"
+            v-if="!isLogin"
         ></u-empty>
 
         <!-- 未登录 -->
-        <view class="login" v-if="!token">
+        <view class="login" v-if="!isLogin">
             <!-- <u-button text="注册" @click="gotoRegister" type="warning" size="large"></u-button> -->
             <u-button text="登录" @click="gotoLogin" type="success" size="large"></u-button>
         </view>
-        
+
         <!-- 管理后台 -->
-        <u-popup :show="admin.openShow" :round="10" mode="top" @close="admin.openShow = !admin.openShow">
-            API : {{admin.apiurl}}
+        <!-- <u-popup :show="admin.openShow" :round="10" mode="top" @close="admin.openShow = !admin.openShow">
+            API : {{ admin.apiurl }}
             <u-input v-model="admin.kw"></u-input>
             <u-button @click="adminEdit">提交</u-button>
-        </u-popup>
-        
+        </u-popup> -->
     </view>
 </template>
 
 <script>
 import {mapState, mapMutations} from 'vuex';
 import badgeMix from '@/mixins/tabbar-badge.js';
-import {orderCount, withdrawalOrderCount} from '@/util/api.js';
+import {orderCount, withdrawalOrderCount, outLogin} from '@/util/api.js';
+import {isEmpty} from '@/util/validate.js'
 export default {
     mixins: [badgeMix],
     data() {
         return {
+            isLogin: false,
             orderCount: 0,
             withdrawOrderCount: 0,
-            admin:{
-                open:0,
-                openShow:false,
-                apiurl:'',
-                kw:''
-            }
+            // admin: {
+            //     open: 0,
+            //     openShow: false,
+            //     apiurl: '',
+            //     kw: '',
+            // },
         };
     },
     computed: {
-        ...mapState('m_user', ['token', 'userinfo', 'collection']),
+        ...mapState('m_user', ['userinfo', 'collection']),
     },
     methods: {
-        ...mapMutations('m_user', ['updateToken']),
+        ...mapMutations('m_user', ['updateUserInfo']),
         gotoRegister() {
             uni.navigateTo({
                 url: '/subpkg/register/register',
@@ -109,31 +110,40 @@ export default {
             });
         },
         async loadOrderCount() {
-            if (!this.token) return;
+            if (!this.userinfo) return;
             let res = await orderCount();
             this.orderCount = res.count;
             let res2 = await withdrawalOrderCount();
             this.withdrawOrderCount = res2.count;
         },
-        outLogin() {
-            this.updateToken('');
+        async outLogin() {
+            await outLogin();
+            this.updateUserInfo({});
             uni.$showMsg('退出成功');
+            uni.switchTab({
+                url: '../../pages/home/home'
+            });
         },
-        opAdmin(){
+        opAdmin() {
             this.admin.open++;
-            if(this.admin.open>=10){
+            if (this.admin.open >= 10) {
                 this.admin.openShow = !this.admin.openShow;
                 this.admin.open = 0;
             }
         },
-        adminEdit(){
-            this.admin.openShow = !this.admin.openShow;
-            uni.$api = this.admin.kw;
-        }
+        adminEdit() {
+            // this.admin.openShow = !this.admin.openShow;
+            // uni.$api = this.admin.kw;
+        },
     },
     onShow() {
-        this.admin.apiurl = uni.$api;
-        this.loadOrderCount();
+        // this.admin.apiurl = uni.$api;
+        if(!isEmpty(this.userinfo)) {
+            this.isLogin = true;
+            this.loadOrderCount();
+        }else{
+            this.isLogin = false;
+        }
     },
 };
 </script>

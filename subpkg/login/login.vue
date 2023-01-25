@@ -18,7 +18,7 @@
                 <u-col span="2"><text>密码</text></u-col>
                 <u-col span="10">
                     <view class="input">
-                        <u--input password border="bottom" v-model="user.userPassword"></u--input>
+                        <u--input password border="bottom" @confirm='login' v-model="user.userPassword"></u--input>
                     </view>
                 </u-col>
             </u-row>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import {userLogin} from '@/util/api.js';
+import {userLogin , outLogin} from '@/util/api.js';
 import {mapMutations} from 'vuex';
 export default {
     data() {
@@ -40,14 +40,15 @@ export default {
         };
     },
     methods: {
-        ...mapMutations('m_user', ['updateUserInfo', 'updateToken']),
+        ...mapMutations('m_user', ['updateUserInfo','updateCookie']),
         async login() {
-            let res = await userLogin(this.user);
-            this.updateToken(res.token);
+            let res = await userLogin(this.user.userAccount,this.user.userPassword);
+            // console.log("res: ",res);
             this.updateUserInfo(res.user);
+            // this.updateCookie(res);
             // 重定向 (在当前路径返回上级进行跳转 , 否则无效)
             uni.switchTab({
-                url: '../../pages/home/home'
+                url: '../../pages/my/my'
             });
         }
     }

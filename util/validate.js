@@ -53,6 +53,7 @@ export function equals(obj1, obj2) {
  */
 export function isEmpty(obj) {
     if (obj === '' || obj === null || obj === undefined) return true;
+    if (JSON.stringify(obj) === '{}') return true;
     for (let n in obj) return false;
     return false;
 };
