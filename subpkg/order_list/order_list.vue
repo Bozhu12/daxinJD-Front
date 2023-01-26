@@ -30,6 +30,7 @@ export default {
             if (this.isloading) return;
             this.isloading = true;
             let res = await orderList(this.page.pageNum, this.page.pageSize);
+            res.list.reverse();
             this.orderList = [...this.orderList, ...res.list];
             this.isloading = false;
             if(res.list.length == 0) {

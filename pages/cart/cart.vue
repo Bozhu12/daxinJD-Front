@@ -19,7 +19,7 @@
             :columns="payType.type"
             closeOnClickOverlay="true"
             @change="selectPayType"
-            @confirm="payType.show = !payType.show"
+            @confirm="selectPayType($event);payType.show = !payType.show;"
             @close="payType.show = !payType.show"
             @cancel="payType.show = !payType.show"
         ></u-picker>

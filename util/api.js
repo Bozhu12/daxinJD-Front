@@ -134,24 +134,21 @@ export function orderList(pageNum, pageSize) {
 export function orderInfo(id) {
     return request({
         url: `/orders/info/${id}`,
-        method: 'get',
-        data: {}
+        method: 'get'
     })
 }
 // 订单数
 export function orderCount() {
     return request({
         url: '/orders/count',
-        method: 'get',
-        data: {}
+        method: 'get'
     })
 }
 // 订单 撤回数
 export function withdrawalOrderCount() {
     return request({
         url: '/orders/withdrawal/count',
-        method: 'get',
-        data: {}
+        method: 'get'
     })
 }
 // 订单 撤回 列表

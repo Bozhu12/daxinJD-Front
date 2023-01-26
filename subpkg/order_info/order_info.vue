@@ -8,7 +8,7 @@
             </view>
             <view class="listUnit">
                 <view class="headMsg">订单状态 :</view>
-                <view>{{ orderInfo.status === 0 ? '成功' : '失败' }}</view>
+                <view>{{ orderInfo.status }}</view>
             </view>
             <view class="listUnit">
                 <view class="headMsg">销售时间 :</view>
@@ -72,6 +72,10 @@ export default {
         async loadData(id) {
             let res = await orderInfo(id);
             this.orderInfo = res.data;
+            let status = res.data.status;
+            if(status === 0) this.orderInfo.status = '未完成';
+            if(status === 1) this.orderInfo.status = '配送中';
+            if(status === 2) this.orderInfo.status = '完成';
         }
     },
     onLoad(options) {
