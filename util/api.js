@@ -105,11 +105,18 @@ export function clienDelById(params) {
     })
 }
 // 订单提交
-export function orderSubmit(params) {
+export function orderSubmit(orderPrice, clientId, userId, orderRemark, goodsList, payType) {
     return request({
         url: '/orders/create',
         method: 'post',
-        data: params
+        data: {
+            orderPrice,
+            clientId,
+            userId,
+            orderRemark,
+            goodsList,
+            payType
+        }
     })
 }
 // 订单列表

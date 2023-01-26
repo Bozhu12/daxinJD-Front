@@ -8,10 +8,21 @@
             </view>
             <text style="color: #e1251b;" v-show="isShow">暂无选择客户</text>
             <view style="width: 300rpx; display: flex;">
-                <u-button text="复制SKU" type="success" @click="copySKU"></u-button>
+                <u-button :text="payType.text" @click="payType.show = true" type="warning"></u-button>
                 <u-button text="选择客户" type="success" @click="selectClient"></u-button>
             </view>
         </view>
+        <!-- 支付方式弹窗 -->
+        <u-picker
+            title="支付方式"
+            :show="payType.show"
+            :columns="payType.type"
+            closeOnClickOverlay="true"
+            @change="selectPayType"
+            @confirm="payType.show = !payType.show"
+            @close="payType.show = !payType.show"
+            @cancel="payType.show = !payType.show"
+        ></u-picker>
         <!-- 客户信息 -->
         <view class="client-msg" v-show="!isShow">
             <view>
@@ -58,11 +69,11 @@
 
         <!-- 扫码添加 -->
         <view class="qrCodeSkuAdd">
+            <view v-if="cart.length !== 0" style="margin-bottom: 10px;">
+                <u-button text="复制SKU" type="success" @click="copySKU"></u-button>
+            </view>
             <u-button type="success" icon="scan" size="large" text="扫码添加" @click="scanQrCode"></u-button>
         </view>
-
-        <!-- 空提示 -->
-        <u-empty mode="car" icon="http://cdn.uviewui.com/uview/empty/car.png" v-if="cart.length === 0"></u-empty>
 
         <!-- 结算 -->
         <view class="submitOrder">
@@ -130,6 +141,12 @@ export default {
     },
     data() {
         return {
+            payType: {
+                text: '支付方式',
+                show: false,
+                selectIndex: -1,
+                type: [['现金', '支付宝', '微信', '刷卡']],
+            },
             modal: {
                 show: false,
                 title: '请确认购物车商品!',
@@ -142,9 +159,7 @@ export default {
             options: [
                 {
                     text: '删除',
-                    style: {
-                        backgroundColor: '#e1251b',
-                    },
+                    style: {backgroundColor: '#e1251b'},
                 },
             ],
         };
@@ -203,6 +218,10 @@ export default {
                 uni.$showMsg('请选择商品!');
                 return;
             }
+            if (this.payType.selectIndex === -1 || this.payType.text === '支付方式'){
+                uni.$showMsg('请选择支付方式!');
+                return;
+            }
             this.modal.content += `
                 销售名称: ${this.userinfo.userName}
                 客户名称: ${this.client.clientName}
@@ -223,17 +242,18 @@ export default {
                 }   ${cartList[i].goodsPrice}￥  x${cartList[i].goodsCount}
                 `;
             }
-            this.modal.content += `\n总计: ${this.checkedGoodsAmount}￥`;
+            this.modal.content += `\n总计 (${this.payType.text}): ${this.checkedGoodsAmount}￥`;
             this.modal.show = !this.modal.show;
         },
         async settleOrder() {
-            let res = await orderSubmit({
-                orderPrice: this.checkedGoodsAmount,
-                clientId: this.client.id,
-                userId: this.userinfo.id,
-                orderRemark: this.orderRemark,
-                goodsList: this.arrdto,
-            });
+            let res = await orderSubmit(
+                this.checkedGoodsAmount,
+                this.client.id,
+                this.userinfo.id,
+                this.orderRemark,
+                this.arrdto,
+                this.payType.selectIndex
+            );
             this.closeModal();
             this.submitCart();
             this.client = '';
@@ -248,6 +268,7 @@ export default {
         },
         copySKU() {
             let str = '';
+            if (this.cart.length == 0) return;
             this.cart.forEach(e => {
                 str += e.goodsSku + ',';
             });
@@ -255,7 +276,12 @@ export default {
             uni.setClipboardData({
                 data: str,
             });
-            uni.$showMsg("拷贝到手!")
+            uni.$showMsg('拷贝到手!');
+        },
+        selectPayType(select) {
+            // console.log("select: ",select);
+            this.payType.selectIndex = select.index;
+            this.payType.text = select.value[0];
         },
     },
     // url参数
