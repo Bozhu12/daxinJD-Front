@@ -52,6 +52,16 @@
             :add="operateAddis"
             @flushed="getClientList"
         ></my-popup-clientEdit>
+        <!-- 确认操作 (删除) -->
+        <u-modal
+            showCancelButton
+            :show="modal.show"
+            :title="modal.title"
+            closeOnClickOverlay
+            @cancel="modal.show = false"
+            @close="modal.show = false"
+            @confirm="delClient"
+        ></u-modal>
     </view>
 </template>
 
@@ -60,6 +70,11 @@ import {clientList, clienDelById, clientGetById} from '@/util/api.js';
 export default {
     data() {
         return {
+            modal: {
+                show: false,
+                title: '请确认删除用户!',
+                delId: -1
+            },
             selected: false,
             kw: '',
             // 是否展示编辑窗口 
@@ -152,10 +167,20 @@ export default {
                 this.selectedClient = res.client;
                 this.operateShow = !this.operateShow;
             } else if (props[0].index === 1) {
-                await clienDelById(props[1]);
-                this.getClientList();
-                uni.$showMsg('删除成功');
+                this.modal.show = true;
+                this.modal.delId = props[1];
             }
+        },
+        async delClient(){
+            let res = await clienDelById(this.modal.delId);
+            this.modal.show = false;
+            this.getClientList();
+            if(res.del) {
+                uni.$showMsg('删除成功');
+            }else{
+                uni.$showMsg('删除失败');
+            }
+            
         },
         scanClient(input) {
             this.kw = input;

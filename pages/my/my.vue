@@ -19,10 +19,10 @@
                             <text>{{ orderCount }}</text>
                             <text>订单查看</text>
                         </view>
-                        <view class="panel-item" @click="gotoWithdrawOrderList">
+                        <!-- <view class="panel-item" @click="gotoWithdrawOrderList">
                             <text>{{ withdrawOrderCount }}</text>
                             <text>订单回退</text>
-                        </view>
+                        </view> -->
                     </view>
                 </view>
                 <!-- 面板2区域 -->
@@ -62,7 +62,7 @@
 <script>
 import {mapState, mapMutations} from 'vuex';
 import badgeMix from '@/mixins/tabbar-badge.js';
-import {orderCount, withdrawalOrderCount, outLogin} from '@/util/api.js';
+import {orderCount, outLogin} from '@/util/api.js';
 import {isEmpty} from '@/util/validate.js'
 export default {
     mixins: [badgeMix],
@@ -70,7 +70,6 @@ export default {
         return {
             isLogin: false,
             orderCount: 0,
-            withdrawOrderCount: 0,
             // admin: {
             //     open: 0,
             //     openShow: false,
@@ -101,20 +100,20 @@ export default {
         },
         gotoOrderList() {
             uni.navigateTo({
-                url: '../../subpkg/order_list/order_list?withdraw=0',
+                url: '../../subpkg/order_list/order_list',
             });
         },
         gotoWithdrawOrderList() {
-            uni.navigateTo({
-                url: '../../subpkg/order_list/order_list?withdraw=1',
-            });
+            // uni.navigateTo({
+            //     url: '../../subpkg/order_list/order_list?withdraw=1',
+            // });
         },
         async loadOrderCount() {
             if (!this.userinfo) return;
-            let res = await orderCount();
+            let res = await orderCount(3);
             this.orderCount = res.count;
-            let res2 = await withdrawalOrderCount();
-            this.withdrawOrderCount = res2.count;
+            // let res2 = await withdrawalOrderCount();
+            // this.withdrawOrderCount = res2.count;
         },
         async outLogin() {
             await outLogin();

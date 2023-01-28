@@ -29,6 +29,7 @@ function service(options = {}) {
         options.fail = (err) => {
             uni.hideLoading();
             console.log("err :>", err);
+            server_url = "http://192.168.20.170:8080/api"
         }
         uni.request(options);
     });

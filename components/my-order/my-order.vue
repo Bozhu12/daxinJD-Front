@@ -12,15 +12,36 @@
                 <view class="count">x{{ order.goodsCount }}</view>
             </view>
             <view class="button-info">
-                <u-button
-                    v-if="showWithdraw"
-                    type="primary"
-                    shape="circle"
-                    color="#e1251b"
-                    text="撤回订单"
-                    customStyle="margin-right: 10rpx; padding: 16px 32rpx; height: 30px;"
-                    @click="modalShwo"
-                ></u-button>
+                <view style="margin-right: 10px;">
+                    <!-- 配送中 (完成 1=>2) -->
+                    <u-button
+                        v-if="order.orderStatus === 1"
+                        type="success"
+                        shape="circle"
+                        text="配送完成"
+                        customStyle="margin-right: 10rpx; padding: 16px 32rpx; height: 30px;"
+                        @click="orderAction(order, 2)"
+                    ></u-button>
+                    <!-- 完成 (撤回未完成 2=>0) -->
+                    <u-button
+                        v-if="order.orderStatus === 2"
+                        type="warning"
+                        shape="circle"
+                        color="#e1251b"
+                        text="撤回订单"
+                        customStyle="margin-right: 10rpx; padding: 16px 32rpx; height: 30px;"
+                        @click="orderAction(order, 0)"
+                    ></u-button>
+                    <!-- 返回撤回 0 => 2-->
+                    <u-button
+                        v-if="order.orderStatus === 0"
+                        type="warning"
+                        shape="circle"
+                        text="恢复完成"
+                        customStyle="margin-right: 10rpx; padding: 16px 32rpx; height: 30px;"
+                        @click="orderAction(order, 2)"
+                    ></u-button>
+                </view>
                 <u-button
                     type="primary"
                     shape="circle"
@@ -31,18 +52,20 @@
             </view>
         </view>
         <u-modal
-            @confirm="withdrawalOrder"
-            @cancel="modalShwo"
+            @confirm="confirmOptions"
+            @cancel="modal.show = false"
+            @close="modal.show = false"
             :show="modal.show"
             :title="modal.title"
-            :content="modal.content"
+            :content="`将要对订单进行操作?`"
             showCancelButton
+            closeOnClickOverlay
         ></u-modal>
     </view>
 </template>
 
 <script>
-import {withdrawalOrderEdit} from '@/util/api.js';
+import {orderStatusEdit} from '@/util/api.js'
 export default {
     name: 'my-order',
     props: {
@@ -50,9 +73,9 @@ export default {
             type: Object,
             default: null
         },
-        showWithdraw: {
-            type: Boolean,
-            default: false
+        showMsg: {
+            type: Object,
+            default: {}
         }
     },
     data() {
@@ -60,7 +83,11 @@ export default {
             modal: {
                 show: false,
                 title: '温馨提示',
-                content: '确认撤回该订单记录?'
+                content: ''
+            },
+            editData:{
+                orderId : -1,
+                status: -1
             }
             // order: {
             //     id: 14,
@@ -80,14 +107,14 @@ export default {
                 url: '../../subpkg/order_info/order_info?orderId=' + this.order.id
             });
         },
-        modalShwo() {
-            this.modal.show = !this.modal.show;
+        async confirmOptions(){
+            let res = await orderStatusEdit(this.editData.orderId , this.editData.status)
+            if(res.order) this.$emit('editDate')
         },
-        async withdrawalOrder() {
-            await withdrawalOrderEdit(this.order.id);
-            this.modal.show = !this.modal.show;
-            this.$emit('clearItem');
-            uni.$showMsg('撤回成功!');
+        orderAction(order, stastus){
+           this.editData.orderId = order.id
+           this.editData.status = stastus
+           this.modal.show = true;
         }
     }
 };

@@ -244,7 +244,7 @@ export default {
                 // 填充数据内容
                 this.editGoods.sku = goods.goodsSku;
                 // this.editGoods.msg1 = goods.goodsName===' '?'':goods.msg2;
-                this.editGoods.msg1 = goods.msg1 ? goods.msg1 : goods.goodsName;
+                this.editGoods.msg1 = goods.msg1 !== ' ' ? goods.msg1 : goods.goodsTitle;
                 this.editGoods.msg2 = goods.msg2;
             }
             // options.index 1 => 删除

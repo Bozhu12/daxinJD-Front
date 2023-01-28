@@ -10,9 +10,11 @@
                 @custom="query"
                 :searchIcon="searchIcon"
                 @search="query"
+                @clear="query"
                 :actionText="buttonText"
             ></u-search>
         </view>
+        <view class="ico-button" v-if="isIco"><u-icon :name="icoName" size='25px' color='#ffffff' @click="icoClick"></u-icon></view>
     </view>
 </template>
 
@@ -35,6 +37,14 @@ export default {
             type: String,
             default: '搜索',
         },
+        icoName:{
+            tyep: String,
+            default: 'calendar'
+        },
+        isIco:{
+            type: Boolean,
+            default: false
+        }
     },
     name: 'my-search',
     data() {
@@ -56,6 +66,9 @@ export default {
             if (err != null) return uni.$showMsg('扫码异常!');
             this.kw = uni.$parsingQrCode(res.result);
         },
+        icoClick(){
+            this.$emit('icoClick');
+        }
     },
 };
 </script>
@@ -69,12 +82,19 @@ export default {
     height: 42px;
     padding: 0 10px;
     align-items: center;
+    display: flex;
+    justify-content: space-between;
 
     .search-content {
+        flex: 1;
         height: 36px;
         border-radius: 16px;
         padding: 0 4px;
         background-color: #ffffff;
+    }
+
+    .ico-button {
+        padding-left: 10px;
     }
 }
 </style>

@@ -1,8 +1,7 @@
 import App from './App'
 import { $http } from '@escook/request-miniprogram'
 import { getCurrentUser } from '@/util/api.js'
-import {isEmpty} from '@/util/validate.js'
-
+import { isEmpty } from '@/util/validate.js'
 // 全局变量
 // 解析二维码信息
 uni.$parsingQrCode = function (url) {

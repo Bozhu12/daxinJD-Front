@@ -120,13 +120,14 @@ export function orderSubmit(orderPrice, clientId, userId, orderRemark, goodsList
     })
 }
 // 订单列表
-export function orderList(pageNum, pageSize) {
+export function orderList(pageNum, pageSize, orderStatus) {
     return request({
         url: '/orders/list',
         method: 'post',
         data: {
             pageNum,
-            pageSize
+            pageSize,
+            orderStatus
         }
     })
 }
@@ -138,35 +139,20 @@ export function orderInfo(id) {
     })
 }
 // 订单数
-export function orderCount() {
+export function orderCount(status) {
     return request({
-        url: '/orders/count',
+        url: `/orders/count/${status}`,
         method: 'get'
     })
 }
-// 订单 撤回数
-export function withdrawalOrderCount() {
+// 订单状态编辑
+export function orderStatusEdit(id, orderStatus) {
     return request({
-        url: '/orders/withdrawal/count',
-        method: 'get'
-    })
-}
-// 订单 撤回 列表
-export function withdrawalOrderList(pageNum, pageSize) {
-    return request({
-        url: '/orders/withdrawal/list',
+        url: `/orders/status/edit`,
         method: 'post',
         data: {
-            pageNum,
-            pageSize
+            id,
+            orderStatus
         }
-    })
-}
-// 订单 撤回 操作
-export function withdrawalOrderEdit(orderId) {
-    return request({
-        url: `/orders/withdrawal/edit/${orderId}`,
-        method: 'get',
-        data: {}
     })
 }
